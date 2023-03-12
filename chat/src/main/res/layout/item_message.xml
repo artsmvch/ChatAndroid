@@ -15,7 +15,7 @@
         android:paddingTop="10dp"
         android:paddingEnd="14dp"
         android:paddingBottom="10dp"
-        android:gravity="center"
+        android:gravity="left|center_vertical"
         android:textAppearance="?textAppearanceBody1"
         android:textSize="16.5sp"
         android:textColor="?messageForegroundColor"/>

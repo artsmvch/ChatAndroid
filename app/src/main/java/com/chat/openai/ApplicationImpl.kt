@@ -11,6 +11,6 @@ class ApplicationImpl : Application() {
     }
 
     private fun setup() {
-        ChatFeature.init(OpenAIChat())
+        ChatFeature.init(OpenAIChat(this))
     }
 }

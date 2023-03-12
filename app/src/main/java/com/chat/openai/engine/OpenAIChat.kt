@@ -1,12 +1,11 @@
 package com.chat.openai.engine
 
+import android.content.Context
 import com.chat.firebase.FirebaseRemoteConfigCache
 import com.chat.openai.BuildConfig
-import com.chat.ui.AbstractChat
 import com.chat.ui.Chat
+import com.chat.ui.DatabaseChat
 import com.chat.ui.Message
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import okhttp3.*
@@ -15,18 +14,13 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class OpenAIChat : AbstractChat(), Chat {
-    private val scope: CoroutineScope get() = GlobalScope
-
+class OpenAIChat(context: Context) : DatabaseChat(context, "openai"), Chat {
     private val openAIApiKeyRef = AtomicReference<String>(BuildConfig.OPEN_AI_API_KEY)
-
-    private val messageId = AtomicLong(0)
 
     private val client: OkHttpClient by lazy {
         OkHttpClient.Builder()
@@ -92,7 +86,7 @@ class OpenAIChat : AbstractChat(), Chat {
 
     private fun createMessage(isFromUser: Boolean, text: CharSequence): Message {
         return object : Message {
-            override val id: Long = messageId.incrementAndGet()
+            override val id: Long = generateMessageId()
             override val isFromUser: Boolean = isFromUser
             override val text: CharSequence = text
         }
@@ -129,7 +123,7 @@ class OpenAIChat : AbstractChat(), Chat {
     }
 
     private fun initAsync() {
-        scope.launch {
+        chatScope.launch {
             FirebaseRemoteConfigCache.getString("openai_config").collectLatest { raw ->
                 kotlin.runCatching {
                     val openAIConfig = JSONObject(raw!!)

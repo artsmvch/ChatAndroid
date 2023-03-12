@@ -1,5 +1,6 @@
 package com.chat.ui
 
+import android.graphics.PointF
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+
 
 internal class ChatFragment : Fragment() {
     private var editText: EditText? = null
@@ -66,7 +68,8 @@ internal class ChatFragment : Fragment() {
                 listView.updatePadding(top = insets.systemWindowInsetTop)
                 insets.consumeSystemWindowInsets()
             }
-            layoutManager = LinearLayoutManager(view.context)
+            layoutManager = MessageLayoutManager(view.context)
+            addItemDecoration(MessageItemDecoration())
             adapter = messageAdapter
         }
 
@@ -88,7 +91,7 @@ internal class ChatFragment : Fragment() {
 
         messages.observe(owner) { messages ->
             messageAdapter?.submitList(messages)
-            messageListView?.smoothScrollToPosition(messages?.size ?: 0)
+            smoothScrollToLastMessage()
         }
 
         error.observe(owner) { error ->
@@ -98,6 +101,11 @@ internal class ChatFragment : Fragment() {
         clearInputFieldEvent.observe(owner) {
             editText?.text = null
         }
+    }
+
+    private fun smoothScrollToLastMessage() {
+        val messageCount = messageAdapter?.currentList?.size ?: return
+        messageListView?.smoothScrollToPosition(messageCount)
     }
 
     private fun skipWindowInsets(view: View) {

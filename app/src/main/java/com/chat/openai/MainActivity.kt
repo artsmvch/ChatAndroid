@@ -14,14 +14,6 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        findViewById<View>(R.id.coordinator).setOnApplyWindowInsetsListener { layout, insets ->
-            layout.updatePadding(bottom = insets.systemWindowInsetBottom)
-            insets.replaceSystemWindowInsets(
-                insets.systemWindowInsetLeft, insets.systemWindowInsetTop,
-                insets.stableInsetRight, 0
-            )
-            insets
-        }
         ensureChatScreen()
     }
 

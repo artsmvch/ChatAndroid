@@ -34,7 +34,14 @@ internal class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         skipWindowInsets(view)
-        view.findViewById<View>(R.id.chat)?.also(::skipWindowInsets)
+        view.findViewById<View>(R.id.chat).setOnApplyWindowInsetsListener { layout, insets ->
+            layout.updatePadding(bottom = insets.systemWindowInsetBottom)
+            insets.replaceSystemWindowInsets(
+                insets.systemWindowInsetLeft, insets.systemWindowInsetTop,
+                insets.stableInsetRight, 0
+            )
+            insets
+        }
 
         editText = view.findViewById<EditText>(R.id.edit_text).apply {
             setOnEditorActionListener { _, actionId, _ ->

@@ -10,7 +10,7 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">#FFFFFF</item>
 
-        <item name="chatBackground">@drawable/bg_chat_day</item>
+        <item name="chatBackground">@drawable/bg_chat_day_alpha</item>
         <item name="chatInputFieldTint">?colorSecondary</item>
         <item name="chatSendActionTint">?colorSecondary</item>
         <item name="chatProgressTint">?colorSecondary</item>

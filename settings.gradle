@@ -16,3 +16,4 @@ rootProject.name = "Chat Android"
 include ':app'
 include ':chat'
 include ':utils'
+include ':firebase'

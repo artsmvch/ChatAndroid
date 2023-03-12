@@ -1,0 +1,30 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Chat.OpenAI" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:statusBarColor">#CCFFFFFF</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">#DF2868</item>
+        <item name="colorPrimaryVariant">#CD1C6E</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#416DF3</item>
+        <item name="colorSecondaryVariant">#3648E6</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">#FFFFFF</item>
+
+        <item name="chatBackground">@drawable/bg_chat_day</item>
+        <item name="chatInputFieldTint">?colorSecondary</item>
+        <item name="chatSendActionTint">?colorSecondary</item>
+        <item name="chatProgressTint">?colorSecondary</item>
+        <item name="messageForegroundColor">#FFFFFF</item>
+        <item name="messageBackground">@drawable/bg_message</item>
+        <item name="userMessageBackground">@drawable/bg_user_message</item>
+    </style>
+
+    <style name="Theme.Chat.OpenAI.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Chat.OpenAI.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Chat.OpenAI.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

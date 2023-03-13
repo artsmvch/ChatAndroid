@@ -84,15 +84,15 @@ class OpenAIChat(context: Context) : DatabaseChat(context, "openai"), Chat {
         }
     }
 
-    private fun createMessage(isFromUser: Boolean, text: CharSequence): Message {
+    private fun createMessage(isFromUser: Boolean, text: String): Message {
         return object : Message {
-            override val id: Long = generateMessageId()
+            override val id: Long = 0L
             override val isFromUser: Boolean = isFromUser
-            override val text: CharSequence = text
+            override val text: String = text
         }
     }
 
-    override suspend fun sendMessage(text: CharSequence) {
+    override suspend fun sendMessage(text: String) {
         appendMessage(
             createMessage(isFromUser = true, text = text)
         )

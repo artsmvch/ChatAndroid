@@ -1,6 +1,7 @@
 package com.chat.ui
 
 import androidx.lifecycle.*
+import androidx.paging.PagedList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -8,8 +9,12 @@ import kotlinx.coroutines.withContext
 internal class ChatViewModel : ViewModel() {
     private val chat: Chat = ChatFeature.getChat()
 
-    val messages: LiveData<List<Message>> by lazy {
-        liveData { chat.getMessages().collect { emit(it) } }
+//    val messages: LiveData<List<Message>> by lazy {
+//        liveData { chat.getMessages().collect { emit(it) } }
+//    }
+
+    val messagePagedList: LiveData<PagedList<Message>> by lazy {
+        chat.getMessageListLiveData()
     }
 
     private val _isLoading = MutableLiveData<Boolean>(false)

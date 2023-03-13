@@ -8,12 +8,12 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
-import androidx.recyclerview.widget.ListAdapter
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chat.utils.dp
 import com.chat.utils.resolveDrawable
 
-internal class MessageAdapter: ListAdapter<Message, MessageAdapter.ViewHolder>(MessageDiffItemCallback) {
+internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHolder>(MessageDiffItemCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -37,16 +37,30 @@ internal class MessageAdapter: ListAdapter<Message, MessageAdapter.ViewHolder>(M
             textView = itemView.findViewById(R.id.text)
         }
 
-        fun bind(item: Message) {
-            textView.text = item.text
-            textView.background = if (item.isFromUser) userMessageBackground else messageBackground
-            textView.updateLayoutParams<FrameLayout.LayoutParams> {
-                gravity = (if (item.isFromUser) Gravity.RIGHT else Gravity.LEFT) or Gravity.CENTER_VERTICAL
+        fun bind(item: Message?) {
+            if (item != null) {
+                textView.text = item.text
+                textView.background =
+                    if (item.isFromUser) userMessageBackground else messageBackground
+                textView.updateLayoutParams<FrameLayout.LayoutParams> {
+                    gravity =
+                        (if (item.isFromUser) Gravity.RIGHT else Gravity.LEFT) or Gravity.CENTER_VERTICAL
+                }
+                frameLayout.updatePadding(
+                    left = if (item.isFromUser) horizontalPadding else 0,
+                    right = if (item.isFromUser) 0 else horizontalPadding
+                )
+            } else {
+                textView.text
+                textView.background = messageBackground
+                textView.updateLayoutParams<FrameLayout.LayoutParams> {
+                    gravity = Gravity.CENTER
+                }
+                frameLayout.updatePadding(
+                    left = horizontalPadding,
+                    right = horizontalPadding
+                )
             }
-            frameLayout.updatePadding(
-                left = if (item.isFromUser) horizontalPadding else 0,
-                right = if (item.isFromUser) 0 else horizontalPadding
-            )
         }
     }
 }

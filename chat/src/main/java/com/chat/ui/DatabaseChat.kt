@@ -1,9 +1,12 @@
 package com.chat.ui
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
+import com.chat.ui.database.MessageDatabase
+import com.chat.ui.database.obtainMessageDatabase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import java.util.concurrent.atomic.AtomicLong
 
 // ConflatedBroadcastChannel
 abstract class DatabaseChat(
@@ -11,16 +14,15 @@ abstract class DatabaseChat(
     private val key: String
 ) : Chat {
     protected val chatScope: CoroutineScope get() = GlobalScope
-    private val database: MessageDatabase by lazy { getMessageDatabase(context, key) }
-    private val messageId by lazy {
-        // TODO: make it non-blocking
-        val lastId = runBlocking { database.getLastMessageId() }
-        AtomicLong(lastId)
+    private val database: MessageDatabase by lazy { obtainMessageDatabase(context, key) }
+
+    final override fun getMessages(): Flow<List<Message>> {
+        return database.queryMessages()
     }
 
-    final override fun getMessages(): Flow<List<Message>> = database.queryMessages()
-
-    protected fun generateMessageId(): Long = messageId.incrementAndGet()
+    final override fun getMessageListLiveData(): LiveData<PagedList<Message>> {
+        return database.getMessageListLiveData()
+    }
 
     protected fun appendMessage(message: Message) {
         chatScope.launch {

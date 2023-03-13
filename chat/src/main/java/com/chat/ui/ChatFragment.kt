@@ -1,6 +1,5 @@
 package com.chat.ui
 
-import android.graphics.PointF
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -68,7 +66,9 @@ internal class ChatFragment : Fragment() {
                 listView.updatePadding(top = insets.systemWindowInsetTop)
                 insets.consumeSystemWindowInsets()
             }
-            layoutManager = MessageLayoutManager(view.context)
+            layoutManager = MessageLayoutManager(view.context).apply {
+                stackFromEnd = true
+            }
             addItemDecoration(MessageItemDecoration())
             adapter = messageAdapter
         }
@@ -89,9 +89,10 @@ internal class ChatFragment : Fragment() {
             sendButton?.state = if (isLoading) SendButton.State.LOADING else SendButton.State.IDLE
         }
 
-        messages.observe(owner) { messages ->
-            messageAdapter?.submitList(messages)
-            smoothScrollToLastMessage()
+        messagePagedList.observe(owner) { pagedList ->
+            messageAdapter?.submitList(pagedList) {
+                smoothScrollToLastMessage()
+            }
         }
 
         error.observe(owner) { error ->

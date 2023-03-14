@@ -60,7 +60,8 @@ internal class ChatFragment : Fragment() {
             }
         }
 
-        messageAdapter = MessageAdapter()
+        val adapter = MessageAdapter()
+        messageAdapter = adapter
         messageListView = view.findViewById<RecyclerView>(R.id.messages_list).apply {
             setOnApplyWindowInsetsListener { listView, insets ->
                 listView.updatePadding(top = insets.systemWindowInsetTop)
@@ -69,8 +70,8 @@ internal class ChatFragment : Fragment() {
             layoutManager = MessageLayoutManager(view.context).apply {
                 stackFromEnd = true
             }
-            addItemDecoration(MessageItemDecoration())
-            adapter = messageAdapter
+            addItemDecoration(MessageMarginItemDecoration())
+            this.adapter = adapter
         }
 
         observeViewModel(viewLifecycleOwner)

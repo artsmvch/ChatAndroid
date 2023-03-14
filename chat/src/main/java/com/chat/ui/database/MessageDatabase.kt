@@ -52,7 +52,8 @@ private class MessageDatabaseImpl(
         val entity = MessageEntity(
             id = 0L,
             isFromUser = message.isFromUser,
-            text = message.text
+            text = message.text,
+            timestamp = message.timestamp
         )
         return database.getMessageDao().insertMessage(entity)
     }

@@ -5,4 +5,5 @@ interface Message {
     val id: Long
     val isFromUser: Boolean
     val text: String
+    val timestamp: Long
 }

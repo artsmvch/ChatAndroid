@@ -16,7 +16,9 @@ internal data class MessageEntity(
     @ColumnInfo("is_from_user")
     override val isFromUser: Boolean,
     @ColumnInfo("text")
-    override val text: String
+    override val text: String,
+    @ColumnInfo("timestamp")
+    override val timestamp: Long
 ) : Message
 
 @Database(

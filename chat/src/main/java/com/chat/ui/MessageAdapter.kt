@@ -15,6 +15,10 @@ import com.chat.utils.resolveDrawable
 
 internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHolder>(MessageDiffItemCallback) {
 
+    public override fun getItem(position: Int): Message? {
+        return super.getItem(position)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_message, parent, false)

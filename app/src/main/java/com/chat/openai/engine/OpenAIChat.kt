@@ -89,6 +89,7 @@ class OpenAIChat(context: Context) : DatabaseChat(context, "openai"), Chat {
             override val id: Long = 0L
             override val isFromUser: Boolean = isFromUser
             override val text: String = text
+            override val timestamp: Long = System.currentTimeMillis()
         }
     }
 

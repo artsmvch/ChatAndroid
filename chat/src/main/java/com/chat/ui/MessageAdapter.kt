@@ -5,13 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chat.utils.dp
+import com.chat.utils.resolveColor
 import com.chat.utils.resolveDrawable
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
 
 internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHolder>(MessageDiffItemCallback) {
 
@@ -31,11 +36,30 @@ internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHold
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        private val frameLayout = itemView as FrameLayout
+//        private val frameLayout = itemView as FrameLayout
+        private val linearLayout = itemView as LinearLayout
+        private val cardView: MaterialCardView = itemView.findViewById(R.id.card)
         private val textView: TextView
+        private val dateView: TextView = itemView.findViewById(R.id.date)
         private val horizontalPadding = itemView.context.dp(32)
-        private val messageBackground = itemView.context.resolveDrawable(R.attr.messageBackground)
-        private val userMessageBackground = itemView.context.resolveDrawable(R.attr.userMessageBackground)
+        private val messageBackgroundColor = itemView.context.resolveColor(R.attr.messageBackgroundColor)
+        private val userMessageBackgroundColor = itemView.context.resolveColor(R.attr.userMessageBackgroundColor)
+
+        private val cardCornerRadius: Float = itemView.context.dp(16).toFloat()
+        private val defaultShapeAppearanceModel = ShapeAppearanceModel.builder()
+            .setBottomLeftCorner(CornerFamily.ROUNDED, cardCornerRadius)
+            .setTopLeftCorner(CornerFamily.ROUNDED, cardCornerRadius)
+            .setTopRightCorner(CornerFamily.ROUNDED, cardCornerRadius)
+            .setBottomRightCorner(CornerFamily.ROUNDED, cardCornerRadius)
+            .build()
+        private val leftShapeAppearanceModel = defaultShapeAppearanceModel.toBuilder()
+            .setBottomLeftCorner(CornerFamily.ROUNDED, 0f)
+            .setBottomRightCorner(CornerFamily.ROUNDED, cardCornerRadius)
+            .build()
+        private val rightShapeAppearanceModel = defaultShapeAppearanceModel.toBuilder()
+            .setBottomLeftCorner(CornerFamily.ROUNDED, cardCornerRadius)
+            .setBottomRightCorner(CornerFamily.ROUNDED, 0f)
+            .build()
 
         init {
             textView = itemView.findViewById(R.id.text)
@@ -43,27 +67,38 @@ internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHold
 
         fun bind(item: Message?) {
             if (item != null) {
-                textView.text = item.text
-                textView.background =
-                    if (item.isFromUser) userMessageBackground else messageBackground
-                textView.updateLayoutParams<FrameLayout.LayoutParams> {
-                    gravity =
-                        (if (item.isFromUser) Gravity.RIGHT else Gravity.LEFT) or Gravity.CENTER_VERTICAL
+                val gravity = (if (item.isFromUser) Gravity.RIGHT else Gravity.LEFT) or Gravity.CENTER_VERTICAL
+                cardView.shapeAppearanceModel =
+                    if (item.isFromUser) rightShapeAppearanceModel else leftShapeAppearanceModel
+                cardView.setCardBackgroundColor(
+                    if (item.isFromUser) userMessageBackgroundColor else messageBackgroundColor
+                )
+                cardView.updateLayoutParams<LinearLayout.LayoutParams> {
+                    this.gravity = gravity
                 }
-                frameLayout.updatePadding(
+                textView.text = item.text
+                dateView.text = MessageDateUtils.getDateText(item)
+                dateView.updateLayoutParams<LinearLayout.LayoutParams> {
+                    this.gravity = gravity
+                }
+                linearLayout.updatePadding(
                     left = if (item.isFromUser) horizontalPadding else 0,
                     right = if (item.isFromUser) 0 else horizontalPadding
                 )
+                linearLayout.gravity = gravity
             } else {
-                textView.text
-                textView.background = messageBackground
-                textView.updateLayoutParams<FrameLayout.LayoutParams> {
+                cardView.shapeAppearanceModel = defaultShapeAppearanceModel
+                cardView.setCardBackgroundColor(userMessageBackgroundColor)
+                cardView.updateLayoutParams<LinearLayout.LayoutParams> {
                     gravity = Gravity.CENTER
                 }
-                frameLayout.updatePadding(
+                textView.text = null
+                dateView.text = null
+                linearLayout.updatePadding(
                     left = horizontalPadding,
                     right = horizontalPadding
                 )
+                linearLayout.gravity = Gravity.CENTER
             }
         }
     }

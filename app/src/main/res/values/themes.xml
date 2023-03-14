@@ -16,7 +16,9 @@
         <item name="chatProgressTint">?colorSecondary</item>
         <item name="messageForegroundColor">#FFFFFF</item>
         <item name="messageBackground">@drawable/bg_message</item>
+        <item name="messageBackgroundColor">#A95ED8</item>
         <item name="userMessageBackground">@drawable/bg_user_message</item>
+        <item name="userMessageBackgroundColor">#7587E8</item>
     </style>
 
     <style name="Theme.Chat.OpenAI.NoActionBar">

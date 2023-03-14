@@ -70,7 +70,7 @@ internal class ChatFragment : Fragment() {
             layoutManager = MessageLayoutManager(view.context).apply {
                 stackFromEnd = true
             }
-            addItemDecoration(MessageMarginItemDecoration())
+            // addItemDecoration(MessageMarginItemDecoration())
             this.adapter = adapter
         }
 

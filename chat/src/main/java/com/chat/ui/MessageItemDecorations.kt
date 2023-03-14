@@ -13,8 +13,8 @@ internal class MessageMarginItemDecoration : ItemDecoration() {
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val verticalMargin = view.context.dp(8)
-        outRect.set(0, verticalMargin, 0, verticalMargin)
+        val margin = view.context.dp(8)
+        outRect.set(margin, margin, margin, margin)
     }
 }
 

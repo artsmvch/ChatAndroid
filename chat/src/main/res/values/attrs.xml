@@ -7,5 +7,7 @@
 
     <attr name="messageForegroundColor" format="color"/>
     <attr name="messageBackground" format="color|reference"/>
+    <attr name="messageBackgroundColor" format="color"/>
     <attr name="userMessageBackground" format="color|reference"/>
+    <attr name="userMessageBackgroundColor" format="color"/>
 </resources>

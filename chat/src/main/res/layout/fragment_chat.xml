@@ -27,7 +27,8 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:clipToPadding="false"
-            android:fitsSystemWindows="true"/>
+            android:fitsSystemWindows="true"
+            android:overScrollMode="never"/>
 
         <View
             android:layout_width="match_parent"

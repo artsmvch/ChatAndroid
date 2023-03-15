@@ -19,6 +19,9 @@ android {
         versionName "1.0"
 
         buildConfigField "String", "OPEN_AI_API_KEY", "\"${localProperties.getProperty('openai.apikey') ?: ""}\""
+        buildConfigField "String", "ADMOB_INTERSTIAIL_AD_UNIT_ID", "\"${localProperties.getProperty('admob.interstitial_ad_unit_id') ?: ""}\""
+
+        resValue "string", "admob_app_id", "\"${localProperties.getProperty('admob.app_id') ?: ""}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -57,4 +60,6 @@ dependencies {
     implementation project(path: ':chat')
     implementation project(path: ':utils')
     implementation project(path: ':firebase')
+
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
 }

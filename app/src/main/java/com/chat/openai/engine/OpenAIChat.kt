@@ -19,7 +19,10 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class OpenAIChat(context: Context) : DatabaseChat(context, "openai"), Chat {
+class OpenAIChat constructor(
+    context: Context,
+    private val listener: Listener
+) : DatabaseChat(context, "openai"), Chat {
     private val openAIApiKeyRef = AtomicReference<String>(BuildConfig.OPEN_AI_API_KEY)
 
     private val client: OkHttpClient by lazy {
@@ -95,7 +98,9 @@ class OpenAIChat(context: Context) : DatabaseChat(context, "openai"), Chat {
 
     override suspend fun sendMessage(text: String) {
         appendMessage(
-            createMessage(isFromUser = true, text = text)
+            createMessage(isFromUser = true, text = text).also {
+                listener.onMessageSent(it)
+            }
         )
         return suspendCoroutine { continuation ->
             val callback = object : Callback {
@@ -104,6 +109,7 @@ class OpenAIChat(context: Context) : DatabaseChat(context, "openai"), Chat {
                         response.body.let(::parseMessageResponse)
                             .onSuccess {
                                 appendMessage(it)
+                                listener.onMessageReceived(it)
                                 continuation.resume(Unit)
                             }
                             .onFailure {
@@ -135,5 +141,10 @@ class OpenAIChat(context: Context) : DatabaseChat(context, "openai"), Chat {
                 }
             }
         }
+    }
+
+    interface Listener {
+        fun onMessageSent(message: Message)
+        fun onMessageReceived(message: Message)
     }
 }

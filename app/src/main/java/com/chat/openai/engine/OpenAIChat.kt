@@ -1,20 +1,16 @@
 package com.chat.openai.engine
 
 import android.content.Context
-import com.chat.firebase.FirebaseRemoteConfigCache
-import com.chat.openai.BuildConfig
 import com.chat.ui.Chat
 import com.chat.ui.DatabaseChat
 import com.chat.ui.Message
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicReference
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -23,7 +19,7 @@ class OpenAIChat constructor(
     context: Context,
     private val listener: Listener
 ) : DatabaseChat(context, "openai"), Chat {
-    private val openAIApiKeyRef = AtomicReference<String>(BuildConfig.OPEN_AI_API_KEY)
+    private val config = OpenAIChatConfig(context, chatScope).apply { preload() }
 
     private val client: OkHttpClient by lazy {
         OkHttpClient.Builder()
@@ -34,12 +30,8 @@ class OpenAIChat constructor(
             .build()
     }
 
-    init {
-        initAsync()
-    }
-
     private fun createMessageRequest(message: String): Request {
-        val apiKey = openAIApiKeyRef.get()
+        val apiKey = config.getApiKey()
         val bodyJson = JSONObject().apply {
             put("model", "gpt-3.5-turbo")
             put("messages",
@@ -75,16 +67,17 @@ class OpenAIChat constructor(
     }
 
     private fun parseResponseError(response: Response): Throwable {
-        return try {
-            val messageFromBody: String? = response.body?.string()?.let { string ->
-                val json = JSONObject(string)
-                json.getJSONObject("error").getString("message")
-            }
-            val message = (messageFromBody ?: "").ifBlank { response.message }
-            Exception(message)
-        } catch (e: Throwable) {
-            IllegalStateException("Failed to parse error", e)
+        val apiError = when (response.code) {
+            401 -> ApiError.UNAUTHORIZED
+            else -> ApiError.UNKNOWN
         }
+        val message = kotlin.runCatching {
+            val body = response.body?.string()!!
+            val json = JSONObject(body)
+            val error = json.getJSONObject("error")
+            error.getString("message")
+        }.getOrNull() ?: ""
+        return OpenAIApiException(apiError, message.ifBlank { response.message })
     }
 
     private fun createMessage(isFromUser: Boolean, text: String): Message {
@@ -117,6 +110,7 @@ class OpenAIChat constructor(
                             }
                     } else {
                         val error = parseResponseError(response)
+                        handleError(error)
                         continuation.resumeWithException(error)
                     }
                 }
@@ -129,16 +123,11 @@ class OpenAIChat constructor(
         }
     }
 
-    private fun initAsync() {
-        chatScope.launch {
-            FirebaseRemoteConfigCache.getString("openai_config").collectLatest { raw ->
-                kotlin.runCatching {
-                    val openAIConfig = JSONObject(raw!!)
-                    val apiKey = openAIConfig.getString("api_key")
-                    if (!apiKey.isNullOrBlank()) {
-                        openAIApiKeyRef.set(apiKey)
-                    }
-                }
+    private fun handleError(error: Throwable) {
+        if (error is OpenAIApiException) {
+            if (error.apiError == ApiError.UNAUTHORIZED) {
+                FirebaseCrashlytics.getInstance().recordException(error)
+                config.reload()
             }
         }
     }

@@ -62,4 +62,9 @@ dependencies {
     implementation project(path: ':firebase')
 
     implementation 'com.google.android.gms:play-services-ads:21.5.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.5'
+}
+
+if (localProperties['com.google.services.enabled'] == 'true') {
+    apply plugin: 'com.google.firebase.crashlytics'
 }

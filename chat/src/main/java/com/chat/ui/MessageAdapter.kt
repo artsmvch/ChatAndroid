@@ -18,7 +18,11 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
 
-internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHolder>(MessageDiffItemCallback) {
+internal typealias OnItemLongClickListener = (item: Message, itemView: View) -> Unit
+
+internal class MessageAdapter constructor(
+    private val onItemLongClickListener: OnItemLongClickListener
+): PagedListAdapter<Message, MessageAdapter.ViewHolder>(MessageDiffItemCallback) {
 
     public override fun getItem(position: Int): Message? {
         return super.getItem(position)
@@ -27,7 +31,7 @@ internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHold
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_message, parent, false)
-        return ViewHolder(itemView)
+        return ViewHolder(itemView, onItemLongClickListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -35,7 +39,8 @@ internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHold
         holder.bind(item)
     }
 
-    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View,
+                     onItemLongClickListener: OnItemLongClickListener): RecyclerView.ViewHolder(itemView) {
 //        private val frameLayout = itemView as FrameLayout
         private val linearLayout = itemView as LinearLayout
         private val cardView: MaterialCardView = itemView.findViewById(R.id.card)
@@ -63,9 +68,16 @@ internal class MessageAdapter: PagedListAdapter<Message, MessageAdapter.ViewHold
 
         init {
             textView = itemView.findViewById(R.id.text)
+            textView.setOnLongClickListener { clickedView ->
+                (itemView.tag as? Message)?.also { item ->
+                    onItemLongClickListener.invoke(item, clickedView)
+                }
+                true
+            }
         }
 
         fun bind(item: Message?) {
+            itemView.tag = item
             if (item != null) {
                 val gravity = (if (item.isFromUser) Gravity.RIGHT else Gravity.LEFT) or Gravity.CENTER_VERTICAL
                 cardView.shapeAppearanceModel =

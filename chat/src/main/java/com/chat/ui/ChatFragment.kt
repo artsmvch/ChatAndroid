@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
@@ -65,7 +66,13 @@ internal class ChatFragment : Fragment() {
             }
         }
 
-        val adapter = MessageAdapter()
+        val adapter = MessageAdapter(
+            onItemLongClickListener = object : OnItemLongClickListener {
+                override fun invoke(item: Message, itemView: View) {
+                    showContextMenu(item, itemView)
+                }
+            }
+        )
         messageAdapter = adapter
         messageListView = view.findViewById<RecyclerView>(R.id.messages_list).apply {
             setOnApplyWindowInsetsListener { listView, insets ->
@@ -133,6 +140,19 @@ internal class ChatFragment : Fragment() {
         val context = this.context ?: return
         val message = error.message.orEmpty().ifBlank { error.toString() }
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showContextMenu(item: Message, itemView: View) {
+        val popup = PopupMenu(itemView.context, itemView)
+        popup.inflate(R.menu.menu_message)
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.share -> viewModel.onShareMessage(item)
+                R.id.delete -> viewModel.onDeleteMessage(item)
+            }
+            true
+        }
+        popup.show()
     }
 
 //    private fun smoothScrollChatToBottom() {

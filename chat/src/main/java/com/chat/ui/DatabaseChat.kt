@@ -1,6 +1,7 @@
 package com.chat.ui
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.chat.ui.database.MessageDatabase
@@ -22,6 +23,22 @@ abstract class DatabaseChat(
 
     final override fun getMessageListLiveData(): LiveData<PagedList<Message>> {
         return database.getMessageListLiveData()
+    }
+
+    final override suspend fun deleteMessage(message: Message) {
+        database.deleteMessage(message)
+    }
+
+    override suspend fun shareMessage(message: Message) = with(Dispatchers.Main) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        // intent.putExtra(Intent.EXTRA_SUBJECT, key)
+        intent.putExtra(Intent.EXTRA_TEXT, message.text)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val chooserIntent = Intent.createChooser(intent, context.getString(R.string.share_message)).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(chooserIntent)
     }
 
     protected fun appendMessage(message: Message) {

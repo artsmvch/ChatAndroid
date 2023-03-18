@@ -17,6 +17,7 @@ internal interface MessageDatabase {
     fun queryMessages(): Flow<List<Message>>
     fun getMessageListLiveData(): LiveData<PagedList<Message>>
     suspend fun insertMessage(message: Message): Long
+    suspend fun deleteMessage(message: Message)
 }
 
 private class MessageDatabaseImpl(
@@ -56,6 +57,10 @@ private class MessageDatabaseImpl(
             timestamp = message.timestamp
         )
         return database.getMessageDao().insertMessage(entity)
+    }
+
+    override suspend fun deleteMessage(message: Message) {
+        database.getMessageDao().deleteMessage(message.id)
     }
 }
 

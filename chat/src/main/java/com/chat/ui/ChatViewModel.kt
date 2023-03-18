@@ -41,4 +41,16 @@ internal class ChatViewModel : ViewModel() {
             _isLoading.value = false
         }
     }
+
+    fun onShareMessage(message: Message) {
+        viewModelScope.launch {
+            chat.shareMessage(message)
+        }
+    }
+
+    fun onDeleteMessage(message: Message) {
+        viewModelScope.launch {
+            chat.deleteMessage(message)
+        }
+    }
 }

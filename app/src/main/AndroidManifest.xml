@@ -10,11 +10,13 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Chat.OpenAI"
+        android:theme="@style/Theme.Chat.GPT.Splash"
+        android:appCategory="productivity"
         tools:targetApi="31">
 
         <meta-data
@@ -25,8 +27,8 @@
             android:name="com.chat.gpt.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Chat.OpenAI.NoActionBar"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Chat.GPT.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

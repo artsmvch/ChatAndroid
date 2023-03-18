@@ -7,6 +7,7 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 
 
@@ -39,6 +40,15 @@ fun Context.resolveColor(@AttrRes attrId: Int): Int {
     val list: ColorStateList = resolveColorStateList(attrId)
         ?: throw NullPointerException("Color not found")
     return list.defaultColor
+}
+
+@DrawableRes
+fun Context.resolveDrawableId(@AttrRes attrId: Int): Int? {
+    val typedValue = TypedValue()
+    if (!theme.resolveAttribute(attrId, typedValue, true)) {
+        return null
+    }
+    return typedValue.resourceId
 }
 
 fun Context.resolveDrawable(@AttrRes attrId: Int): Drawable? {

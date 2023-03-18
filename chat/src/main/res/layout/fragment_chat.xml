@@ -7,9 +7,9 @@
     android:fitsSystemWindows="true">
 
     <ImageView
+        android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="?chatBackground"
         android:scaleType="centerCrop"/>
 
     <LinearLayout

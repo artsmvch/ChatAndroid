@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
@@ -41,6 +42,10 @@ internal class ChatFragment : Fragment() {
                 insets.stableInsetRight, 0
             )
             insets
+        }
+
+        view.findViewById<ImageView>(R.id.background).also { imageView ->
+            ChatBackgroundLoader.load(imageView)
         }
 
         editText = view.findViewById<EditText>(R.id.edit_text).apply {

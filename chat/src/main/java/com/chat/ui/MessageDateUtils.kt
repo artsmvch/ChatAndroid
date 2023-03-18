@@ -11,7 +11,7 @@ internal object MessageDateUtils {
 //        val date = Date(message.timestamp)
 //        val localDate = LocalDate.fromDateFields(date)
         return if (DateUtils.isToday(message.timestamp)) {
-            TODAY_DATE_FORMAT.print(message.timestamp).uppercase()
+            TODAY_DATE_FORMAT.print(message.timestamp)
         } else {
             DATE_FORMAT.print(message.timestamp)
         }

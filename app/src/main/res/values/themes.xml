@@ -5,8 +5,8 @@
         <item name="colorPrimary">#DF2868</item>
         <item name="colorPrimaryVariant">#CD1C6E</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">#416DF3</item>
-        <item name="colorSecondaryVariant">#3648E6</item>
+        <item name="colorSecondary">#3C64CC</item>
+        <item name="colorSecondaryVariant">#563CCC</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">#FFFFFF</item>
 

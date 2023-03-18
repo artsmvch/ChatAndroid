@@ -1,7 +1,7 @@
-package com.chat.openai
+package com.chat.gpt
 
 import android.app.Application
-import com.chat.openai.engine.OpenAIChat
+import com.chat.gpt.engine.OpenAIChat
 import com.chat.ui.ChatFeature
 import com.chat.ui.Message
 import com.google.android.gms.ads.*

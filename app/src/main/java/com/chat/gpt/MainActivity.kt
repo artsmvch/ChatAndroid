@@ -1,10 +1,8 @@
-package com.chat.openai
+package com.chat.gpt
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.core.view.updatePadding
 import com.chat.ui.ChatFeature
 import com.chat.utils.resolveColor
 

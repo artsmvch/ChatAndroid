@@ -1,10 +1,10 @@
-package com.chat.openai.engine
+package com.chat.gpt.engine
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.chat.firebase.FirebaseRemoteConfigCache
-import com.chat.openai.BuildConfig
+import com.chat.gpt.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

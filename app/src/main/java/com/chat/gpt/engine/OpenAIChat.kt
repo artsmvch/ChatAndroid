@@ -1,4 +1,4 @@
-package com.chat.openai.engine
+package com.chat.gpt.engine
 
 import android.content.Context
 import com.chat.ui.Chat

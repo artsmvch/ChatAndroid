@@ -1,4 +1,4 @@
-package com.chat.openai
+package com.chat.gpt
 
 import android.os.Build
 import android.view.View

@@ -8,11 +8,11 @@ localProperties.load(project.file('local.properties').newDataInputStream())
 println("loadedProperties=" + localProperties)
 
 android {
-    namespace 'com.chat.openai'
+    namespace 'com.chat.gpt'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.chat.openai"
+        applicationId "com.chat.gpt"
         minSdk 23
         targetSdk 33
         versionCode 1
@@ -62,9 +62,13 @@ dependencies {
     implementation project(path: ':firebase')
 
     implementation 'com.google.android.gms:play-services-ads:21.5.0'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.5'
+
+    implementation platform('com.google.firebase:firebase-bom:31.2.3')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }
 
 if (localProperties['com.google.services.enabled'] == 'true') {
+    apply plugin: 'com.google.gms.google-services'
     apply plugin: 'com.google.firebase.crashlytics'
 }

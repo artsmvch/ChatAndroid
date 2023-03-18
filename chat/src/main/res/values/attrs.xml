@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="chatBackground" format="color|reference"/>
+    <attr name="chatOnBackgroundColor" format="color"/>
     <attr name="chatInputFieldTint" type="color"/>
     <attr name="chatSendActionTint" type="color"/>
     <attr name="chatProgressTint" type="color"/>

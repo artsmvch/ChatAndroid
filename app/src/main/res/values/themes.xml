@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.Chat.OpenAI" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:statusBarColor">#CCFFFFFF</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">#CCB5ACEC</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="colorPrimary">#DF2868</item>
         <item name="colorPrimaryVariant">#CD1C6E</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -10,15 +10,16 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">#FFFFFF</item>
 
-        <item name="chatBackground">@drawable/bg_chat_day_alpha</item>
+        <item name="chatBackground">@drawable/bg_chat_gradient</item>
+        <item name="chatOnBackgroundColor">@color/white</item>
         <item name="chatInputFieldTint">?colorSecondary</item>
         <item name="chatSendActionTint">?colorSecondary</item>
         <item name="chatProgressTint">?colorSecondary</item>
-        <item name="messageForegroundColor">#FFFFFF</item>
+        <item name="messageForegroundColor">#3E3E3E</item>
         <item name="messageBackground">@drawable/bg_message</item>
-        <item name="messageBackgroundColor">#A95ED8</item>
+        <item name="messageBackgroundColor">@color/white</item>
         <item name="userMessageBackground">@drawable/bg_user_message</item>
-        <item name="userMessageBackgroundColor">#7587E8</item>
+        <item name="userMessageBackgroundColor">@color/white</item>
     </style>
 
     <style name="Theme.Chat.OpenAI.NoActionBar">

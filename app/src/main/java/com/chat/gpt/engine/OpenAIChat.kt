@@ -17,7 +17,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class OpenAIChat constructor(
     context: Context,
-    private val listener: Listener
+    private val listeners: List<Listener>
 ) : DatabaseChat(context, "openai"), Chat {
     private val config = OpenAIChatConfig(context, chatScope).apply { preload() }
 
@@ -91,8 +91,8 @@ class OpenAIChat constructor(
 
     override suspend fun sendMessage(text: String) {
         appendMessage(
-            createMessage(isFromUser = true, text = text).also {
-                listener.onMessageSent(it)
+            createMessage(isFromUser = true, text = text).also { msg ->
+                listeners.forEach { it.onMessageSent(msg) }
             }
         )
         return suspendCoroutine { continuation ->
@@ -100,9 +100,9 @@ class OpenAIChat constructor(
                 override fun onResponse(call: Call, response: Response) {
                     if (response.isSuccessful) {
                         response.body.let(::parseMessageResponse)
-                            .onSuccess {
-                                appendMessage(it)
-                                listener.onMessageReceived(it)
+                            .onSuccess { msg ->
+                                appendMessage(msg)
+                                listeners.forEach { it.onMessageReceived(msg) }
                                 continuation.resume(Unit)
                             }
                             .onFailure {

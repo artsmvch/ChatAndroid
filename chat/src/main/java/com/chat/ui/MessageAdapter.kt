@@ -68,7 +68,7 @@ internal class MessageAdapter constructor(
 
         init {
             textView = itemView.findViewById(R.id.text)
-            textView.setOnLongClickListener { clickedView ->
+            cardView.setOnLongClickListener { clickedView ->
                 (itemView.tag as? Message)?.also { item ->
                     onItemLongClickListener.invoke(item, clickedView)
                 }

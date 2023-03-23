@@ -10,6 +10,10 @@ object ChatFeature {
         chatRef.set(chat)
     }
 
+    fun isChatScreen(fragment: Fragment): Boolean {
+        return fragment is ChatFragment
+    }
+
     fun createChatScreen(): Fragment {
         return ChatFragment()
     }

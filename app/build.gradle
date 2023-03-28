@@ -3,6 +3,12 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def version_code = 1
+def version_major = 1
+def version_minor = 0
+def version_patch = 0
+def version_name = "${version_major}.${version_minor}.${version_patch}"
+
 Properties localProperties = new Properties()
 localProperties.load(project.file('local.properties').newDataInputStream())
 println("loadedProperties=" + localProperties)
@@ -11,12 +17,23 @@ android {
     namespace 'com.chat.gpt'
     compileSdk 33
 
+    signingConfigs {
+        release {
+            def configDir = getReleaseConfigDir()
+            def releaseConfigs = loadProperties("$configDir/signing.properties")
+            storeFile file("$configDir/${releaseConfigs['storeFile']}")
+            storePassword releaseConfigs['storePassword']
+            keyAlias releaseConfigs['keyAlias']
+            keyPassword releaseConfigs['keyPassword']
+        }
+    }
+
     defaultConfig {
         applicationId "com.chat.gpt"
         minSdk 23
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode version_code
+        versionName version_name
 
         buildConfigField "String", "OPEN_AI_API_KEY", "\"${localProperties.getProperty('openai.apikey') ?: ""}\""
         buildConfigField "String", "ADMOB_INTERSTIAIL_AD_UNIT_ID", "\"${localProperties.getProperty('admob.interstitial_ad_unit_id') ?: ""}\""
@@ -28,8 +45,15 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            applicationIdSuffix ".debug"
         }
     }
     compileOptions {

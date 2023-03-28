@@ -29,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.chat.gpt"
+        applicationId "com.chat.bot"
         minSdk 23
         targetSdk 33
         versionCode version_code
@@ -53,7 +53,7 @@ android {
         debug {
             minifyEnabled false
             shrinkResources false
-            applicationIdSuffix ".debug"
+//            applicationIdSuffix ".debug"
         }
     }
     compileOptions {

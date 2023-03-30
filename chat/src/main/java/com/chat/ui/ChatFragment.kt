@@ -115,6 +115,10 @@ internal class ChatFragment : Fragment() {
         clearInputFieldEvent.observe(owner) {
             editText?.text = null
         }
+
+        shareMessageEvent.observe(owner) { message ->
+            context?.shareMessage(message)
+        }
     }
 
     private fun smoothScrollToLastMessage() {

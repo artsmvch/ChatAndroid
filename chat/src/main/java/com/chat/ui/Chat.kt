@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface Chat {
     fun getMessages(): Flow<List<Message>>
     fun getMessageListLiveData(): LiveData<PagedList<Message>>
-    suspend fun shareMessage(message: Message)
     suspend fun deleteMessage(message: Message)
     suspend fun sendMessage(text: String)
 }

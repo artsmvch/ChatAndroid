@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, ChatFeature.createChatScreen())
+            .replace(R.id.fragment_container, ChatFeature.createChatScreen(), TAG_CHAT)
             .commitNow()
     }
 

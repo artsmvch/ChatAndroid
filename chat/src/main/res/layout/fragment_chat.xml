@@ -71,6 +71,8 @@
                         android:layout_height="wrap_content"
                         android:maxHeight="120dp"
                         android:textAppearance="?textAppearanceBody1"
+                        android:textColor="?colorOnSurface"
+                        android:textColorHint="@color/input_hint"
                         android:textSize="18sp"
                         android:inputType="textMultiLine"
                         android:imeOptions="actionSend"

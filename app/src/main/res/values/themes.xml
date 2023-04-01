@@ -11,6 +11,7 @@
         <item name="colorSecondaryVariant">#563CCC</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">#FFFFFF</item>
+        <item name="colorOnSurface">#4A4A4A</item>
 
         <item name="chatBackground">@drawable/bg_chat_gradient</item>
         <item name="chatOnBackgroundColor">@color/white</item>

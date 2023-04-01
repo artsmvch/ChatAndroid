@@ -3,4 +3,6 @@
     <string name="input_field_hint">Type something…</string>
     <string name="share_messages">Share messages</string>
     <string name="delete_messages">Delete messages</string>
+    <string name="user">User</string>
+    <string name="bot">Bot</string>
 </resources>

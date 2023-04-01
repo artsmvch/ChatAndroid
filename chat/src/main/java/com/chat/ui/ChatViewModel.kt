@@ -26,8 +26,8 @@ internal class ChatViewModel : ViewModel() {
     private val _clearInputFieldEvent = OneShotLiveData<Unit>()
     val clearInputFieldEvent: LiveData<Unit> get() = _clearInputFieldEvent
 
-    private val _shareMessagesEvent = OneShotLiveData<Set<Message>>()
-    val shareMessagesEvent: LiveData<Set<Message>> get() = _shareMessagesEvent
+    private val _shareMessagesEvent = OneShotLiveData<List<Message>>()
+    val shareMessagesEvent: LiveData<List<Message>> get() = _shareMessagesEvent
 
     fun onSendMessage(rawText: CharSequence?) {
         if (rawText.isNullOrBlank()) {
@@ -46,7 +46,12 @@ internal class ChatViewModel : ViewModel() {
     }
 
     fun onShareMessages(messages: Set<Message>) {
-        _shareMessagesEvent.setValue(messages)
+        viewModelScope.launch {
+            val sortedMessages = withContext(Dispatchers.Default) {
+                messages.sortedBy { it.timestamp }
+            }
+            _shareMessagesEvent.setValue(sortedMessages)
+        }
     }
 
     fun onDeleteMessages(messages: Set<Message>) {

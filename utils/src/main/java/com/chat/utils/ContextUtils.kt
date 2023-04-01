@@ -8,6 +8,7 @@ import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.content.res.AppCompatResources
 
 
@@ -57,4 +58,13 @@ fun Context.resolveDrawable(@AttrRes attrId: Int): Drawable? {
         return null
     }
     return AppCompatResources.getDrawable(this, typedValue.resourceId)
+}
+
+@StyleRes
+fun Context.resolveStyleRes(@AttrRes attrId: Int): Int? {
+    val typedValue = TypedValue()
+    if (!theme.resolveAttribute(attrId, typedValue, true)) {
+        return null
+    }
+    return typedValue.resourceId
 }

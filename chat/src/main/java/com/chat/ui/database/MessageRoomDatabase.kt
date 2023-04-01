@@ -41,6 +41,6 @@ internal abstract class MessageDao {
     @Insert
     abstract suspend fun insertMessage(entity: MessageEntity): Long
 
-    @Query("DELETE FROM messages WHERE id = :entityId")
-    abstract suspend fun deleteMessage(entityId: Long)
+    @Query("DELETE FROM messages WHERE id in (:entityIds)")
+    abstract suspend fun deleteMessages(entityIds: Collection<Long>)
 }

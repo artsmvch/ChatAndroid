@@ -24,8 +24,8 @@ abstract class DatabaseChat(
         return database.getMessageListLiveData()
     }
 
-    final override suspend fun deleteMessage(message: Message) {
-        database.deleteMessage(message)
+    final override suspend fun deleteMessages(messages: Set<Message>) {
+        database.deleteMessages(messages)
     }
 
     protected fun appendMessage(message: Message) {

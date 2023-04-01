@@ -1,20 +1,24 @@
 package com.chat.ui
 
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.chat.utils.SystemBarUtils
+import com.chat.utils.resolveColor
+import com.chat.utils.resolveStyleRes
 
 
 internal class ChatFragment : Fragment() {
@@ -22,10 +26,26 @@ internal class ChatFragment : Fragment() {
     private var sendButton: SendButton? = null
     private var messageListView: RecyclerView? = null
     private var messageAdapter: MessageAdapter? = null
+    private var multiSelectionActionMode: ActionMode? = null
+
+    // Colors
+    @ColorInt
+    private var statusBarColor: Int? = null
+    @ColorInt
+    private var actionModeBackgroundColor: Int? = null
 
     private val viewModel: ChatViewModel by lazy {
         val provider = ViewModelProvider(this)
         provider[ChatViewModel::class.java]
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        statusBarColor = context.resolveColor(android.R.attr.statusBarColor)
+        context.resolveStyleRes(com.google.android.material.R.attr.actionModeStyle)?.let { styleId ->
+            val themedContext = androidx.appcompat.view.ContextThemeWrapper(context, styleId)
+            actionModeBackgroundColor = themedContext.resolveColor(com.google.android.material.R.attr.background)
+        }
     }
 
     override fun onCreateView(
@@ -69,7 +89,17 @@ internal class ChatFragment : Fragment() {
         val adapter = MessageAdapter(
             onItemLongClickListener = object : OnItemLongClickListener {
                 override fun invoke(item: Message, itemView: View) {
-                    showContextMenu(item, itemView)
+                }
+            },
+            multiSelectionModeListener = object : MultiSelectionModeListener {
+                override fun onStartMultiSelectionMode() {
+                    startMultiSelectionActionMode()
+                }
+                override fun onItemSelectionChanged(item: Message, isSelected: Boolean) {
+                    updateMultiSelectionActionMode(item, isSelected)
+                }
+                override fun onStopMultiSelectionMode() {
+                    stopMultiSelectionActionMode()
                 }
             }
         )
@@ -116,8 +146,8 @@ internal class ChatFragment : Fragment() {
             editText?.text = null
         }
 
-        shareMessageEvent.observe(owner) { message ->
-            context?.shareMessage(message)
+        shareMessagesEvent.observe(owner) { message ->
+            context?.shareMessages(message)
         }
     }
 
@@ -146,17 +176,65 @@ internal class ChatFragment : Fragment() {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun showContextMenu(item: Message, itemView: View) {
-        val popup = PopupMenu(itemView.context, itemView)
-        popup.inflate(R.menu.menu_message)
-        popup.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.share -> viewModel.onShareMessage(item)
-                R.id.delete -> viewModel.onDeleteMessage(item)
-            }
-            true
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            stopMultiSelectionActionMode()
         }
-        popup.show()
+    }
+
+    private fun startMultiSelectionActionMode() {
+        if (multiSelectionActionMode != null) {
+            // TODO: check if the current action mode is active
+            return
+        }
+        val activity = this.activity as? AppCompatActivity ?: return
+        val callback = object : ActionMode.Callback {
+            override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+                mode.menuInflater.inflate(R.menu.context_menu_messages, menu)
+                actionModeBackgroundColor?.also(::setStatusBarColor)
+                return true
+            }
+
+            override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+                return true
+            }
+
+            override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+                when (item.itemId) {
+                    R.id.share -> {
+                        viewModel.onShareMessages(messageAdapter?.getSelectedItems().orEmpty())
+                    }
+                    R.id.delete -> {
+                        viewModel.onDeleteMessages(messageAdapter?.getSelectedItems().orEmpty())
+                    }
+                }
+                return true
+            }
+
+            override fun onDestroyActionMode(mode: ActionMode) {
+                messageAdapter?.stopMultiSelectionMode()
+                multiSelectionActionMode = null
+                statusBarColor?.also(::setStatusBarColor)
+            }
+        }
+        val actionMode = activity.startSupportActionMode(callback)
+        multiSelectionActionMode = actionMode
+    }
+
+    private fun updateMultiSelectionActionMode(item: Message, isSelected: Boolean) {
+        val selectedItemCount = messageAdapter?.getSelectedItemCount() ?: 0
+        multiSelectionActionMode?.title = selectedItemCount.toString()
+    }
+
+    private fun stopMultiSelectionActionMode() {
+        multiSelectionActionMode?.finish()
+        multiSelectionActionMode = null
+    }
+
+    private fun setStatusBarColor(@ColorInt color: Int) {
+        val activity = this.activity ?: return
+        SystemBarUtils.setStatusBarColor(activity, color)
     }
 
 //    private fun smoothScrollChatToBottom() {

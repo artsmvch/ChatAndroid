@@ -17,6 +17,9 @@
         android:layout_marginBottom="4dp"
         android:clickable="true"
         android:focusable="true"
+        android:checkable="true"
+        app:checkedIcon="@null"
+        app:checkedIconTint="@color/transparent"
         app:cardMaxElevation="1dp"
         app:cardElevation="1dp"
         app:rippleColor="@color/message_card_ripple">

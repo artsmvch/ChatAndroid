@@ -4,7 +4,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.updateLayoutParams
@@ -13,34 +12,89 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chat.utils.dp
 import com.chat.utils.resolveColor
-import com.chat.utils.resolveDrawable
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
 
 internal typealias OnItemLongClickListener = (item: Message, itemView: View) -> Unit
+internal interface MultiSelectionModeListener {
+    fun onStartMultiSelectionMode() = Unit
+    fun onItemSelectionChanged(item: Message, isSelected: Boolean) = Unit
+    fun onStopMultiSelectionMode() = Unit
+}
 
 internal class MessageAdapter constructor(
-    private val onItemLongClickListener: OnItemLongClickListener
+    private val onItemLongClickListener: OnItemLongClickListener,
+    private val multiSelectionModeListener: MultiSelectionModeListener
 ): PagedListAdapter<Message, MessageAdapter.ViewHolder>(MessageDiffItemCallback) {
 
-    public override fun getItem(position: Int): Message? {
-        return super.getItem(position)
+    var isMultiSelectionModeEnabled: Boolean = false
+        private set
+    private val selectedItemIds = HashMap<Long, Message>()
+
+    private fun handleItemClick(position: Int, item: Message?, itemView: View, isLongClick: Boolean) {
+        if (item == null) {
+            return
+        }
+        if (isLongClick || isMultiSelectionModeEnabled) {
+            handleMultiSelectionMode(position, item, itemView)
+        }
+    }
+
+    private fun handleMultiSelectionMode(position: Int, item: Message, itemView: View) {
+        val oldItem = selectedItemIds.put(item.id, item)
+        val wasSelected = oldItem != null
+        if (wasSelected) {
+            selectedItemIds.remove(item.id)
+        }
+        // Check if the multi selection mode is being started
+        if (selectedItemIds.isNotEmpty() && !isMultiSelectionModeEnabled) {
+            isMultiSelectionModeEnabled = true
+            multiSelectionModeListener.onStartMultiSelectionMode()
+        }
+        // Check if the multi selection mode is being stopped
+        if (selectedItemIds.isEmpty() && isMultiSelectionModeEnabled) {
+            isMultiSelectionModeEnabled = false
+            multiSelectionModeListener.onStopMultiSelectionMode()
+        }
+        multiSelectionModeListener.onItemSelectionChanged(item, !wasSelected)
+        notifyItemChanged(position)
+    }
+
+    fun stopMultiSelectionMode() {
+        if (isMultiSelectionModeEnabled) {
+            selectedItemIds.clear()
+            isMultiSelectionModeEnabled = false
+            multiSelectionModeListener.onStopMultiSelectionMode()
+            notifyDataSetChanged()
+        }
+    }
+
+    fun getSelectedItemCount(): Int {
+        return selectedItemIds.count()
+    }
+
+    fun getSelectedItems(): Set<Message> {
+        return selectedItemIds.values.toSet()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_message, parent, false)
-        return ViewHolder(itemView, onItemLongClickListener)
+        return ViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        val isSelected = if (item != null) {
+            selectedItemIds.contains(item.id)
+        } else {
+            false
+        }
+        holder.bind(item, isSelected)
     }
 
-    class ViewHolder(itemView: View,
-                     onItemLongClickListener: OnItemLongClickListener): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 //        private val frameLayout = itemView as FrameLayout
         private val linearLayout = itemView as LinearLayout
         private val cardView: MaterialCardView = itemView.findViewById(R.id.card)
@@ -69,14 +123,19 @@ internal class MessageAdapter constructor(
         init {
             textView = itemView.findViewById(R.id.text)
             cardView.setOnLongClickListener { clickedView ->
-                (itemView.tag as? Message)?.also { item ->
-                    onItemLongClickListener.invoke(item, clickedView)
-                }
+                handleItemClick(bindingAdapterPosition, getItem(), clickedView, isLongClick = true)
                 true
+            }
+            cardView.setOnClickListener { clickedView ->
+                handleItemClick(bindingAdapterPosition, getItem(), clickedView, isLongClick = false)
             }
         }
 
-        fun bind(item: Message?) {
+        private fun getItem(): Message? {
+            return itemView.tag as? Message
+        }
+
+        fun bind(item: Message?, isSelected: Boolean) {
             itemView.tag = item
             if (item != null) {
                 val gravity = (if (item.isFromUser) Gravity.RIGHT else Gravity.LEFT) or Gravity.CENTER_VERTICAL
@@ -112,6 +171,7 @@ internal class MessageAdapter constructor(
                 )
                 linearLayout.gravity = Gravity.CENTER
             }
+            cardView.isChecked = isSelected
         }
     }
 }

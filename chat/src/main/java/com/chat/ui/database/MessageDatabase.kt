@@ -7,7 +7,9 @@ import androidx.paging.PagedList
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.chat.ui.Message
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 internal fun obtainMessageDatabase(context: Context, key: String): MessageDatabase {
     return MessageDatabaseImpl(context, key)
@@ -17,7 +19,7 @@ internal interface MessageDatabase {
     fun queryMessages(): Flow<List<Message>>
     fun getMessageListLiveData(): LiveData<PagedList<Message>>
     suspend fun insertMessage(message: Message): Long
-    suspend fun deleteMessage(message: Message)
+    suspend fun deleteMessages(messages: Set<Message>)
 }
 
 private class MessageDatabaseImpl(
@@ -59,8 +61,11 @@ private class MessageDatabaseImpl(
         return database.getMessageDao().insertMessage(entity)
     }
 
-    override suspend fun deleteMessage(message: Message) {
-        database.getMessageDao().deleteMessage(message.id)
+    override suspend fun deleteMessages(messages: Set<Message>) {
+        withContext(Dispatchers.Default) {
+            val entityIds = messages.map { it.id }
+            database.getMessageDao().deleteMessages(entityIds)
+        }
     }
 }
 

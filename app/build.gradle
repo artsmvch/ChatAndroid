@@ -53,7 +53,7 @@ android {
         debug {
             minifyEnabled false
             shrinkResources false
-//            applicationIdSuffix ".debug"
+            applicationIdSuffix ".debug"
         }
     }
     compileOptions {

@@ -29,7 +29,11 @@ internal class ChatViewModel : ViewModel() {
     private val _shareMessagesEvent = OneShotLiveData<List<Message>>()
     val shareMessagesEvent: LiveData<List<Message>> get() = _shareMessagesEvent
 
-    fun onSendMessage(rawText: CharSequence?) {
+    private val _deleteMessagesConfirmationEvent = OneShotLiveData<Collection<Message>>()
+    val deleteMessagesConfirmationEvent: LiveData<Collection<Message>>
+        get() = _deleteMessagesConfirmationEvent
+
+    fun onSendMessageClick(rawText: CharSequence?) {
         if (rawText.isNullOrBlank()) {
             return
         }
@@ -45,7 +49,7 @@ internal class ChatViewModel : ViewModel() {
         }
     }
 
-    fun onShareMessages(messages: Set<Message>) {
+    fun onShareMessagesClick(messages: Collection<Message>) {
         viewModelScope.launch {
             val sortedMessages = withContext(Dispatchers.Default) {
                 messages.sortedBy { it.timestamp }
@@ -54,7 +58,11 @@ internal class ChatViewModel : ViewModel() {
         }
     }
 
-    fun onDeleteMessages(messages: Set<Message>) {
+    fun onDeleteMessagesClick(messages: Collection<Message>) {
+        _deleteMessagesConfirmationEvent.setValue(messages)
+    }
+
+    fun onDeleteMessagesConfirmed(messages: Collection<Message>) {
         viewModelScope.launch {
             chat.deleteMessages(messages)
         }

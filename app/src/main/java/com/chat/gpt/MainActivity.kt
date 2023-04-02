@@ -9,7 +9,7 @@ import com.chat.utils.resolveColor
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_Chat_GPT)
+        setTheme(R.style.Theme_Chat)
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)

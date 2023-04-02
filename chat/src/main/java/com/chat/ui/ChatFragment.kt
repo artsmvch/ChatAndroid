@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chat.utils.SystemBarUtils
 import com.chat.utils.resolveColor
 import com.chat.utils.resolveStyleRes
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 internal class ChatFragment : Fragment() {
@@ -146,8 +147,12 @@ internal class ChatFragment : Fragment() {
             editText?.text = null
         }
 
-        shareMessagesEvent.observe(owner) { message ->
-            context?.shareMessages(message)
+        shareMessagesEvent.observe(owner) { messages ->
+            context?.shareMessages(messages)
+        }
+
+        deleteMessagesConfirmationEvent.observe(owner) { messages ->
+            askConfirmationForMessageDeletion(messages)
         }
     }
 
@@ -166,7 +171,7 @@ internal class ChatFragment : Fragment() {
         val editText = editText ?: return
         val text = editText.text ?: return
         if (text.isNotEmpty()) {
-            viewModel.onSendMessage(text)
+            viewModel.onSendMessageClick(text)
         }
     }
 
@@ -203,10 +208,10 @@ internal class ChatFragment : Fragment() {
             override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
                 when (item.itemId) {
                     R.id.share -> {
-                        viewModel.onShareMessages(messageAdapter?.getSelectedItems().orEmpty())
+                        viewModel.onShareMessagesClick(messageAdapter?.getSelectedItems().orEmpty())
                     }
                     R.id.delete -> {
-                        viewModel.onDeleteMessages(messageAdapter?.getSelectedItems().orEmpty())
+                        viewModel.onDeleteMessagesClick(messageAdapter?.getSelectedItems().orEmpty())
                     }
                 }
                 return true
@@ -235,6 +240,21 @@ internal class ChatFragment : Fragment() {
     private fun setStatusBarColor(@ColorInt color: Int) {
         val activity = this.activity ?: return
         SystemBarUtils.setStatusBarColor(activity, color)
+    }
+
+    private fun askConfirmationForMessageDeletion(messages: Collection<Message>) {
+        val context = this.context ?: return
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.delete_messages)
+            .setMessage(R.string.delete_messages_confirmation)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                viewModel.onDeleteMessagesConfirmed(messages)
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+        dialog.show()
     }
 
 //    private fun smoothScrollChatToBottom() {

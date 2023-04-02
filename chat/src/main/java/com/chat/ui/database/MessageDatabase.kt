@@ -19,7 +19,7 @@ internal interface MessageDatabase {
     fun queryMessages(): Flow<List<Message>>
     fun getMessageListLiveData(): LiveData<PagedList<Message>>
     suspend fun insertMessage(message: Message): Long
-    suspend fun deleteMessages(messages: Set<Message>)
+    suspend fun deleteMessages(messages: Collection<Message>)
 }
 
 private class MessageDatabaseImpl(
@@ -61,11 +61,11 @@ private class MessageDatabaseImpl(
         return database.getMessageDao().insertMessage(entity)
     }
 
-    override suspend fun deleteMessages(messages: Set<Message>) {
-        withContext(Dispatchers.Default) {
-            val entityIds = messages.map { it.id }
-            database.getMessageDao().deleteMessages(entityIds)
+    override suspend fun deleteMessages(messages: Collection<Message>) {
+        val entityIds = withContext(Dispatchers.Default) {
+            messages.map { it.id }
         }
+        database.getMessageDao().deleteMessages(entityIds)
     }
 }
 

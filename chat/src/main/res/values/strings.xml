@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
     <string name="input_field_hint">Type something…</string>
     <string name="share_messages">Share messages</string>
     <string name="delete_messages">Delete messages</string>
+    <string name="delete_messages_confirmation">Do you want to delete the selected messages?</string>
     <string name="user">User</string>
     <string name="bot">Bot</string>
 </resources>

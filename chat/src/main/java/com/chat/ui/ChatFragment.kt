@@ -158,6 +158,10 @@ internal class ChatFragment : Fragment() {
         deleteMessagesConfirmationEvent.observe(owner) { messages ->
             askConfirmationForMessageDeletion(messages)
         }
+
+        closeContextMenuEvent.observe(owner) {
+            multiSelectionActionMode?.finish()
+        }
     }
 
     private fun smoothScrollToLastMessage() {
@@ -251,10 +255,12 @@ internal class ChatFragment : Fragment() {
         val dialog = MaterialAlertDialogBuilder(context)
             .setTitle(R.string.delete_messages)
             .setMessage(R.string.delete_messages_confirmation)
-            .setPositiveButton(R.string.delete) { _, _ ->
-                viewModel.onDeleteMessagesConfirmed(messages)
+            .setPositiveButton(R.string.delete) { dialog, _ ->
+                viewModel.onMessageDeletionConfirmed(messages)
+                dialog.dismiss()
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
+                viewModel.onMessageDeletionDeclined(messages)
                 dialog.dismiss()
             }
             .create()

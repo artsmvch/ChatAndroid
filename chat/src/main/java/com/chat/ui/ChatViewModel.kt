@@ -33,6 +33,9 @@ internal class ChatViewModel : ViewModel() {
     val deleteMessagesConfirmationEvent: LiveData<Collection<Message>>
         get() = _deleteMessagesConfirmationEvent
 
+    private val _closeContextMenuEvent = OneShotLiveData<Unit>()
+    val closeContextMenuEvent: LiveData<Unit> = _closeContextMenuEvent
+
     fun onSendMessageClick(rawText: CharSequence?) {
         if (rawText.isNullOrBlank()) {
             return
@@ -50,6 +53,7 @@ internal class ChatViewModel : ViewModel() {
     }
 
     fun onShareMessagesClick(messages: Collection<Message>) {
+        _closeContextMenuEvent.setValue(Unit)
         viewModelScope.launch {
             val sortedMessages = withContext(Dispatchers.Default) {
                 messages.sortedBy { it.timestamp }
@@ -62,9 +66,14 @@ internal class ChatViewModel : ViewModel() {
         _deleteMessagesConfirmationEvent.setValue(messages)
     }
 
-    fun onDeleteMessagesConfirmed(messages: Collection<Message>) {
+    fun onMessageDeletionConfirmed(messages: Collection<Message>) {
+        _closeContextMenuEvent.setValue(Unit)
         viewModelScope.launch {
             chat.deleteMessages(messages)
         }
+    }
+
+    fun onMessageDeletionDeclined(messages: Collection<Message>) {
+        _closeContextMenuEvent.setValue(Unit)
     }
 }

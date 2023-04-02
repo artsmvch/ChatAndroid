@@ -7,10 +7,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="colorPrimary">#DF2868</item>
-        <item name="colorPrimaryVariant">#CD1C6E</item>
+        <item name="colorPrimary">#3C64CC</item>
+        <item name="colorPrimaryVariant">#2F6EBC</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">#3C64CC</item>
+        <item name="colorSecondary">#783CCC</item>
         <item name="colorSecondaryVariant">#563CCC</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSurface">#FFFFFF</item>
@@ -20,9 +20,9 @@
 
         <item name="chatBackground">@drawable/bg_chat_gradient</item>
         <item name="chatOnBackgroundColor">@color/white</item>
-        <item name="chatInputFieldTint">?colorSecondary</item>
-        <item name="chatSendActionTint">?colorSecondary</item>
-        <item name="chatProgressTint">?colorSecondary</item>
+        <item name="chatInputFieldTint">?colorPrimary</item>
+        <item name="chatSendActionTint">?colorPrimary</item>
+        <item name="chatProgressTint">?colorPrimary</item>
         <item name="messageForegroundColor">#3E3E3E</item>
         <item name="messageBackground">@drawable/bg_message</item>
         <item name="messageBackgroundColor">@color/white</item>

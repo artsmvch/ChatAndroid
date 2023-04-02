@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.GravityInt
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.paging.PagedListAdapter
@@ -138,25 +139,36 @@ internal class MessageAdapter constructor(
         fun bind(item: Message?, isSelected: Boolean) {
             itemView.tag = item
             if (item != null) {
-                val gravity = (if (item.isFromUser) Gravity.RIGHT else Gravity.LEFT) or Gravity.CENTER_VERTICAL
+                @GravityInt
+                val contentGravity: Int
+                @MaterialCardView.CheckedIconGravity
+                val checkedIconGravity: Int
+                if (item.isFromUser) {
+                    contentGravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
+                    checkedIconGravity = MaterialCardView.CHECKED_ICON_GRAVITY_TOP_START
+                } else {
+                    contentGravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
+                    checkedIconGravity = MaterialCardView.CHECKED_ICON_GRAVITY_TOP_END
+                }
                 cardView.shapeAppearanceModel =
                     if (item.isFromUser) rightShapeAppearanceModel else leftShapeAppearanceModel
                 cardView.setCardBackgroundColor(
                     if (item.isFromUser) userMessageBackgroundColor else messageBackgroundColor
                 )
                 cardView.updateLayoutParams<LinearLayout.LayoutParams> {
-                    this.gravity = gravity
+                    this.gravity = contentGravity
                 }
+                cardView.checkedIconGravity = checkedIconGravity
                 textView.text = item.text
                 dateView.text = MessageDateUtils.getDateText(item)
                 dateView.updateLayoutParams<LinearLayout.LayoutParams> {
-                    this.gravity = gravity
+                    this.gravity = contentGravity
                 }
                 linearLayout.updatePadding(
                     left = if (item.isFromUser) horizontalPadding else 0,
                     right = if (item.isFromUser) 0 else horizontalPadding
                 )
-                linearLayout.gravity = gravity
+                linearLayout.gravity = contentGravity
             } else {
                 cardView.shapeAppearanceModel = defaultShapeAppearanceModel
                 cardView.setCardBackgroundColor(userMessageBackgroundColor)

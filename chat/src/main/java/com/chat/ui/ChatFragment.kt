@@ -15,11 +15,13 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.chat.utils.SystemBarUtils
 import com.chat.utils.resolveColor
 import com.chat.utils.resolveStyleRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 
 
 internal class ChatFragment : Fragment() {
@@ -148,7 +150,9 @@ internal class ChatFragment : Fragment() {
         }
 
         shareMessagesEvent.observe(owner) { messages ->
-            context?.shareMessages(messages)
+            lifecycleScope.launch {
+                context?.shareMessages(messages)
+            }
         }
 
         deleteMessagesConfirmationEvent.observe(owner) { messages ->

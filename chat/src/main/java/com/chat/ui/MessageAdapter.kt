@@ -17,7 +17,9 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
 
-internal typealias OnItemLongClickListener = (item: Message, itemView: View) -> Unit
+internal interface OnItemClickListener {
+    fun onItemClick(item: Message, itemView: View) = Unit
+}
 internal interface MultiSelectionModeListener {
     fun onStartMultiSelectionMode() = Unit
     fun onItemSelectionChanged(item: Message, isSelected: Boolean) = Unit
@@ -25,7 +27,7 @@ internal interface MultiSelectionModeListener {
 }
 
 internal class MessageAdapter constructor(
-    private val onItemLongClickListener: OnItemLongClickListener,
+    private val onItemClickListener: OnItemClickListener,
     private val multiSelectionModeListener: MultiSelectionModeListener
 ): PagedListAdapter<Message, MessageAdapter.ViewHolder>(MessageDiffItemCallback) {
 
@@ -39,6 +41,8 @@ internal class MessageAdapter constructor(
         }
         if (isLongClick || isMultiSelectionModeEnabled) {
             handleMultiSelectionMode(position, item, itemView)
+        } else {
+            onItemClickListener.onItemClick(item, itemView)
         }
     }
 

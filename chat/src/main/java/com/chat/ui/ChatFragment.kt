@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
@@ -90,8 +91,9 @@ internal class ChatFragment : Fragment() {
         }
 
         val adapter = MessageAdapter(
-            onItemLongClickListener = object : OnItemLongClickListener {
-                override fun invoke(item: Message, itemView: View) {
+            onItemClickListener = object : OnItemClickListener {
+                override fun onItemClick(item: Message, itemView: View) {
+                    showContextMenu(item, itemView)
                 }
             },
             multiSelectionModeListener = object : MultiSelectionModeListener {
@@ -265,6 +267,19 @@ internal class ChatFragment : Fragment() {
             }
             .create()
         dialog.show()
+    }
+
+    private fun showContextMenu(item: Message, itemView: View) {
+        val popup = PopupMenu(itemView.context, itemView)
+        popup.inflate(R.menu.menu_message)
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.share -> viewModel.onShareMessageClick(item)
+                R.id.delete -> viewModel.onDeleteMessageClick(item)
+            }
+            true
+        }
+        popup.show()
     }
 
 //    private fun smoothScrollChatToBottom() {

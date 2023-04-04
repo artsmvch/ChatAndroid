@@ -52,6 +52,10 @@ internal class ChatViewModel : ViewModel() {
         }
     }
 
+    fun onShareMessageClick(message: Message) {
+        onShareMessagesClick(setOf(message))
+    }
+
     fun onShareMessagesClick(messages: Collection<Message>) {
         _closeContextMenuEvent.setValue(Unit)
         viewModelScope.launch {
@@ -60,6 +64,10 @@ internal class ChatViewModel : ViewModel() {
             }
             _shareMessagesEvent.setValue(sortedMessages)
         }
+    }
+
+    fun onDeleteMessageClick(messages: Message) {
+        onDeleteMessagesClick(setOf(messages))
     }
 
     fun onDeleteMessagesClick(messages: Collection<Message>) {

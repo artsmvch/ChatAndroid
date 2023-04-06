@@ -5,12 +5,9 @@ import com.google.android.gms.tasks.SuccessContinuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
@@ -55,7 +52,8 @@ object FirebaseRemoteConfigCache {
     }
 
     private suspend fun getActivatedConfig(fetch: Boolean, minimumFetchIntervalInSeconds: Long? = null): FirebaseRemoteConfig {
-        return suspendCancellableCoroutine { continuation ->
+        return suspendCancellableCoroutine { unsafeContinuation ->
+            val continuation = SafeContinuation(unsafeContinuation)
             try {
                 val configInstance = FirebaseRemoteConfig.getInstance()
                 val task: Task<Boolean> = if (fetch) {

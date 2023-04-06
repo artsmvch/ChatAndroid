@@ -11,6 +11,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicInteger
@@ -45,8 +46,9 @@ internal class AdvertisementChatListener(
         }
         coroutineScope.launch {
             FirebaseRemoteConfigCache.getString(KEY_ADMOB_INTERSTITIAL_AD_CONFIG)
+                .filterNotNull()
                 .collectLatest { config ->
-                    if (config != null) {
+                    runCatching {
                         val json = JSONObject(config)
                         val isEnabled = json.getBoolean("is_enabled")
                         val minVersionCode = json.optInt("min_version_code")
@@ -60,7 +62,6 @@ internal class AdvertisementChatListener(
                 }
         }
     }
-
 
     private fun showInterstitialAd(activity: Activity, unitId: String) {
         val adRequest = AdRequest.Builder()

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun ensureChatScreen() {
         val fragment = supportFragmentManager.findFragmentByTag(TAG_CHAT)
-        if (fragment != null) {
+        if (fragment != null && ChatFeature.isChatScreen(fragment)) {
             return
         }
         supportFragmentManager.beginTransaction()

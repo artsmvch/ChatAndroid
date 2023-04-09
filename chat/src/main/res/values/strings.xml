@@ -2,9 +2,14 @@
 <resources>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="messages">messages</string>
+    <string name="copy">Copy</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
     <string name="input_field_hint">Type something…</string>
+    <string name="copy_message">Copy message</string>
+    <string name="copy_messages">Copy messages</string>
     <string name="share_message">Share message</string>
     <string name="share_messages">Share messages</string>
     <string name="delete_messages">Delete messages</string>

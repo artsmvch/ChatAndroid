@@ -26,6 +26,9 @@ internal class ChatViewModel : ViewModel() {
     private val _clearInputFieldEvent = OneShotLiveData<Unit>()
     val clearInputFieldEvent: LiveData<Unit> get() = _clearInputFieldEvent
 
+    private val _copyMessagesEvent = OneShotLiveData<List<Message>>()
+    val copyMessagesEvent: LiveData<List<Message>> get() = _copyMessagesEvent
+
     private val _shareMessagesEvent = OneShotLiveData<List<Message>>()
     val shareMessagesEvent: LiveData<List<Message>> get() = _shareMessagesEvent
 
@@ -49,6 +52,20 @@ internal class ChatViewModel : ViewModel() {
             chat.runCatching { sendMessage(text) }
                 .onFailure { _error.setValue(it) }
             _isLoading.value = false
+        }
+    }
+
+    fun onCopyMessageClick(message: Message) {
+        onCopyMessagesClick(setOf(message))
+    }
+
+    fun onCopyMessagesClick(messages: Collection<Message>) {
+        _closeContextMenuEvent.setValue(Unit)
+        viewModelScope.launch {
+            val sortedMessages = withContext(Dispatchers.Default) {
+                messages.sortedBy { it.timestamp }
+            }
+            _copyMessagesEvent.setValue(sortedMessages)
         }
     }
 

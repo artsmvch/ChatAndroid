@@ -151,6 +151,15 @@ internal class ChatFragment : Fragment() {
             editText?.text = null
         }
 
+        copyMessagesEvent.observe(owner) { messages ->
+            lifecycleScope.launch {
+                context?.copyMessagesToClipboard(messages)
+                context?.also {
+                    Toast.makeText(it, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         shareMessagesEvent.observe(owner) { messages ->
             lifecycleScope.launch {
                 context?.shareMessages(messages)
@@ -217,6 +226,9 @@ internal class ChatFragment : Fragment() {
 
             override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
                 when (item.itemId) {
+                    R.id.copy -> {
+                        viewModel.onCopyMessagesClick(messageAdapter?.getSelectedItems().orEmpty())
+                    }
                     R.id.share -> {
                         viewModel.onShareMessagesClick(messageAdapter?.getSelectedItems().orEmpty())
                     }
@@ -274,6 +286,7 @@ internal class ChatFragment : Fragment() {
         popup.inflate(R.menu.menu_message)
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.copy -> viewModel.onCopyMessageClick(item)
                 R.id.share -> viewModel.onShareMessageClick(item)
                 R.id.delete -> viewModel.onDeleteMessageClick(item)
             }

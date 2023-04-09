@@ -61,11 +61,12 @@ internal class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         skipWindowInsets(view)
         view.findViewById<View>(R.id.chat).setOnApplyWindowInsetsListener { layout, insets ->
-            layout.updatePadding(bottom = insets.systemWindowInsetBottom)
-            insets.replaceSystemWindowInsets(
-                insets.systemWindowInsetLeft, insets.systemWindowInsetTop,
-                insets.stableInsetRight, 0
+            layout.updatePadding(
+                left = insets.systemWindowInsetLeft,
+                right = insets.stableInsetRight,
+                bottom = insets.systemWindowInsetBottom
             )
+            insets.replaceSystemWindowInsets(0, insets.systemWindowInsetTop, 0, 0)
             insets
         }
 

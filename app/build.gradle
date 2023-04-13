@@ -3,10 +3,10 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-def version_code = 4
+def version_code = 5
 def version_major = 1
 def version_minor = 0
-def version_patch = 3
+def version_patch = 4
 def version_name = "${version_major}.${version_minor}.${version_patch}"
 
 Properties localProperties = new Properties()

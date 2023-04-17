@@ -13,6 +13,10 @@ internal class ChatViewModel : ViewModel() {
 //        liveData { chat.getMessages().collect { emit(it) } }
 //    }
 
+    val chatName: LiveData<String> by lazy {
+        MutableLiveData(chat.descriptor.name)
+    }
+
     val messagePagedList: LiveData<PagedList<Message>> by lazy {
         chat.getMessageListLiveData()
     }

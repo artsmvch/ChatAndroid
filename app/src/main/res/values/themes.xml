@@ -2,12 +2,12 @@
     <color name="action_mode_background">#563CCC</color>
 
     <style name="Theme.Chat" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:statusBarColor">#CC8179CA</item>
+        <item name="android:statusBarColor">?colorPrimary</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="colorPrimary">#3C64CC</item>
+        <item name="colorPrimary">#3D3FA8</item>
         <item name="colorPrimaryVariant">#2F6EBC</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">#783CCC</item>

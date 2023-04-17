@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Chat GPT</string>
+    <string name="chat_name">Chatty AI Bot</string>
     <string name="action_settings">Settings</string>
 </resources>

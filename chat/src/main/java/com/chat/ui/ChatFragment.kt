@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -21,11 +20,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chat.utils.SystemBarUtils
 import com.chat.utils.resolveColor
 import com.chat.utils.resolveStyleRes
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 
 internal class ChatFragment : Fragment() {
+    private var toolbar: MaterialToolbar? = null
     private var editText: EditText? = null
     private var sendButton: SendButton? = null
     private var messageListView: RecyclerView? = null
@@ -59,20 +60,11 @@ internal class ChatFragment : Fragment() {
     ): View? = inflater.inflate(R.layout.fragment_chat, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        skipWindowInsets(view)
-        view.findViewById<View>(R.id.chat).setOnApplyWindowInsetsListener { layout, insets ->
-            layout.updatePadding(
-                left = insets.systemWindowInsetLeft,
-                right = insets.stableInsetRight,
-                bottom = insets.systemWindowInsetBottom
-            )
-            insets.replaceSystemWindowInsets(0, insets.systemWindowInsetTop, 0, 0)
-            insets
-        }
-
         view.findViewById<ImageView>(R.id.background).also { imageView ->
             ChatBackgroundLoader.load(imageView)
         }
+
+        toolbar = view.findViewById(R.id.toolbar)
 
         editText = view.findViewById<EditText>(R.id.edit_text).apply {
             setOnEditorActionListener { _, actionId, _ ->
@@ -111,10 +103,6 @@ internal class ChatFragment : Fragment() {
         )
         messageAdapter = adapter
         messageListView = view.findViewById<RecyclerView>(R.id.messages_list).apply {
-            setOnApplyWindowInsetsListener { listView, insets ->
-                listView.updatePadding(top = insets.systemWindowInsetTop)
-                insets.consumeSystemWindowInsets()
-            }
             layoutManager = MessageLayoutManager(view.context).apply {
                 stackFromEnd = true
             }
@@ -127,6 +115,7 @@ internal class ChatFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        toolbar = null
         editText = null
         sendButton = null
         messageListView = null
@@ -134,6 +123,10 @@ internal class ChatFragment : Fragment() {
     }
 
     private fun observeViewModel(owner: LifecycleOwner) = with(viewModel) {
+        chatName.observe(owner) { name ->
+            toolbar?.title = name
+        }
+
         isLoading.observe(owner) { isLoading ->
             sendButton?.state = if (isLoading) SendButton.State.LOADING else SendButton.State.IDLE
         }

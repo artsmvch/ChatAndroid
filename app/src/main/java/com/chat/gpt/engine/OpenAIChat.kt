@@ -1,6 +1,7 @@
 package com.chat.gpt.engine
 
 import android.content.Context
+import com.chat.gpt.R
 import com.chat.ui.Chat
 import com.chat.ui.DatabaseChat
 import com.chat.ui.Message
@@ -87,6 +88,10 @@ class OpenAIChat constructor(
             override val text: String = text
             override val timestamp: Long = System.currentTimeMillis()
         }
+    }
+
+    override val descriptor: Chat.Descriptor = object : Chat.Descriptor {
+        override val name: String get() = context.getString(R.string.chat_name)
     }
 
     override suspend fun sendMessage(text: String) {

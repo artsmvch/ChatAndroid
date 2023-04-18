@@ -52,7 +52,7 @@ internal class AdvertisementChatListener(
                         val json = JSONObject(config)
                         val isEnabled = json.getBoolean("is_enabled")
                         val minVersionCode = json.optInt("min_version_code")
-                        val unitId = json.getString("unit_id")
+                        val unitId = json.optString("unit_id", BuildConfig.ADMOB_INTERSTIAIL_AD_UNIT_ID)
                         if (isEnabled && BuildConfig.VERSION_CODE >= minVersionCode) {
                             foregroundActivityProvider.invoke()?.also { activity ->
                                 showInterstitialAd(activity, unitId)

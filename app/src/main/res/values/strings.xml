@@ -1,4 +1,10 @@
 <resources>
     <string name="chat_name">Chatty AI Bot</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="chat_suggestions">
+        <item>Hello!</item>
+        <item>Tell a joke</item>
+        <item>Tell a fairytale</item>
+    </string-array>
 </resources>

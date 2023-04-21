@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -315,11 +316,13 @@ internal class ChatFragment : Fragment() {
         chipGroup.removeAllViews()
         suggestions?.forEach { text ->
             val chip = Chip(chipGroup.context)
+            chip.setEnsureMinTouchTargetSize(false)
             chip.text = text
             chip.setOnClickListener {
                 viewModel.onSuggestionClick(text)
             }
             chipGroup.addView(chip)
         }
+        chipGroup.isVisible = !suggestions.isNullOrEmpty()
     }
 }

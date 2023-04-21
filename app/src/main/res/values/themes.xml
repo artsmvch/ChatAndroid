@@ -7,8 +7,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="actionBarSize">52dp</item>
         <item name="colorPrimary">#3D3FA8</item>
-        <item name="colorPrimaryVariant">#2F6EBC</item>
+        <item name="colorPrimaryVariant">#2F63BC</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">#783CCC</item>
         <item name="colorSecondaryVariant">#563CCC</item>
@@ -17,6 +18,7 @@
         <item name="colorOnSurface">#4A4A4A</item>
         <item name="actionModeStyle">@style/Theme.Chat.ActionMode</item>
         <item name="materialAlertDialogTheme">@style/Theme.Chat.MaterialAlertDialog</item>
+        <item name="chipStyle">@style/Theme.Chat.Chip.Action</item>
 
         <item name="chatBackground">@drawable/bg_chat_gradient</item>
         <item name="chatOnBackgroundColor">@color/white</item>
@@ -51,5 +53,12 @@
 
     <style name="ShapeAppearanceOverlay.MaterialAlertDialog.Rounded" parent="">
         <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="Theme.Chat.Chip.Action" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipBackgroundColor">?colorPrimaryVariant</item>
+        <item name="android:textColor">?colorOnPrimary</item>
+        <item name="android:textSize">17sp</item>
+        <item name="chipCornerRadius">16dp</item>
     </style>
 </resources>

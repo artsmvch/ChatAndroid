@@ -30,8 +30,8 @@
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|enterAlways"
+                    android:layout_height="?actionBarSize"
+                    app:layout_scrollFlags="noScroll"
                     app:titleTextColor="?colorOnPrimary"/>
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -56,7 +56,10 @@
             android:layout_gravity="bottom"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:visibility="gone"/>
+            android:paddingBottom="12dp"
+            app:chipSpacingVertical="8dp"
+            app:chipSpacingHorizontal="8dp"
+            android:visibility="visible"/>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"

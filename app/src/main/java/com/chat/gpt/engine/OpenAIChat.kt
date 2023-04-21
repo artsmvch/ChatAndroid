@@ -17,7 +17,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class OpenAIChat constructor(
-    context: Context,
+    private val context: Context,
     private val listeners: List<Listener>
 ) : DatabaseChat(context, "openai"), Chat {
     private val config = OpenAIChatConfig(context, chatScope).apply { preload() }
@@ -138,7 +138,11 @@ class OpenAIChat constructor(
     }
 
     override suspend fun getSuggestions(): List<String> {
-        return emptyList()
+        return try {
+            context.resources.getStringArray(R.array.chat_suggestions).toList()
+        } catch (e: Throwable) {
+            emptyList<String>()
+        }
     }
 
     interface Listener {

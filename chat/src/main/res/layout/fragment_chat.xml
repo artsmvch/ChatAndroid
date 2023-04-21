@@ -33,6 +33,7 @@
                     android:layout_height="?actionBarSize"
                     app:layout_scrollFlags="noScroll"
                     app:titleTextColor="?colorOnPrimary"
+                    app:title="@string/chat"
                     app:menu="@menu/menu_chat"/>
             </com.google.android.material.appbar.AppBarLayout>
 

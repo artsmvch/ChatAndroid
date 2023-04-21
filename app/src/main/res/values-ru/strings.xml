@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="chat_suggestions">
+        <item>Привет!</item>
+        <item>Расскажи шутку</item>
+        <item>Расскажи сказку</item>
+    </string-array>
+</resources>

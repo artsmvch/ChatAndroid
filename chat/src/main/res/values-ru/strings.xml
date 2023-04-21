@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat">Чат</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Отменить</string>
+    <string name="copied_to_clipboard">Скопировано в буфер обмена</string>
+    <string name="messages">Сообщения</string>
+    <string name="copy">Скопировать</string>
+    <string name="share">Поделиться</string>
+    <string name="delete">Удалить</string>
+    <string name="input_field_hint">Задать вопрос</string>
+    <string name="copy_message">Скопировать сообщение</string>
+    <string name="copy_messages">Скопировать сообщения</string>
+    <string name="share_message">Поделиться сообщением</string>
+    <string name="share_messages">Поделиться сообщениями</string>
+    <string name="delete_message">Удалить сообщение</string>
+    <string name="delete_messages">Удалить сообщения</string>
+    <string name="delete_messages_confirmation">Вы хотите удалить выбранные сообщения?</string>
+    <string name="user">Пользователь</string>
+    <string name="bot">Бот</string>
+    <string name="speaker">Спикер</string>
+</resources>

@@ -138,10 +138,6 @@ internal class ChatFragment : Fragment() {
     }
 
     private fun observeViewModel(owner: LifecycleOwner) = with(viewModel) {
-        chatName.observe(owner) { name ->
-            toolbar?.title = name
-        }
-
         isLoading.observe(owner) { isLoading ->
             sendButton?.state = if (isLoading) SendButton.State.LOADING else SendButton.State.IDLE
         }

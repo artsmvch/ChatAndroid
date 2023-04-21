@@ -93,7 +93,7 @@ class OpenAIChat constructor(
     }
 
     override val descriptor: Chat.Descriptor = object : Chat.Descriptor {
-        override val name: String get() = context.getString(R.string.chat_name)
+        override val name: String get() = ""//context.getString(R.string.chat_name)
     }
 
     override suspend fun sendMessage(text: String) {

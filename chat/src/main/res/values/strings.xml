@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="chat">Chat</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
-    <string name="messages">messages</string>
+    <string name="messages">Messages</string>
     <string name="copy">Copy</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
@@ -12,8 +13,8 @@
     <string name="copy_messages">Copy messages</string>
     <string name="share_message">Share message</string>
     <string name="share_messages">Share messages</string>
-    <string name="delete_messages">Delete messages</string>
     <string name="delete_message">Delete message</string>
+    <string name="delete_messages">Delete messages</string>
     <string name="delete_messages_confirmation">Do you want to delete the selected messages?</string>
     <string name="user">User</string>
     <string name="bot">Bot</string>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat">چت کنید</string>
+    <string name="ok">خوب</string>
+    <string name="cancel">لغو کنید</string>
+    <string name="copied_to_clipboard">در کلیپ بورد کپی شد</string>
+    <string name="messages">پیام ها</string>
+    <string name="copy">کپی به کلیپ بورد</string>
+    <string name="share">اشتراک گذاری</string>
+    <string name="delete">حذف</string>
+    <string name="input_field_hint">یه سوال بپرس</string>
+    <string name="copy_message">کپی پیام</string>
+    <string name="copy_messages">پیام ها را کپی کنید</string>
+    <string name="share_message">پیام را به اشتراک بگذارید</string>
+    <string name="share_messages">پیام ها را به اشتراک بگذارید</string>
+    <string name="delete_message">حذف پیام</string>
+    <string name="delete_messages">پیام ها را حذف کنید</string>
+    <string name="delete_messages_confirmation">آیا می خواهید پیام های انتخاب شده را حذف کنید؟</string>
+    <string name="user">کاربر</string>
+    <string name="bot">ربات</string>
+    <string name="speaker">بلندگو</string>
+</resources>

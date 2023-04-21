@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="chat_suggestions">
+        <item>سلام!</item>
+        <item>یک جوک بگو</item>
+        <item>یک افسانه بگو</item>
+    </string-array>
+</resources>

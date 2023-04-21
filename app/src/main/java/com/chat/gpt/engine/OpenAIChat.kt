@@ -137,6 +137,10 @@ class OpenAIChat constructor(
         }
     }
 
+    override suspend fun getSuggestions(): List<String> {
+        return emptyList()
+    }
+
     interface Listener {
         fun onMessageSent(message: Message)
         fun onMessageReceived(message: Message)

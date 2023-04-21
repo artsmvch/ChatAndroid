@@ -10,6 +10,7 @@ interface Chat {
     fun getMessageListLiveData(): LiveData<PagedList<Message>>
     suspend fun deleteMessages(messages: Collection<Message>)
     suspend fun sendMessage(text: String)
+    suspend fun getSuggestions(): List<String>
 
     interface Descriptor {
         val name: String

@@ -49,6 +49,15 @@
                 tools:listitem="@layout/item_message"/>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/suggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:visibility="gone"/>
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

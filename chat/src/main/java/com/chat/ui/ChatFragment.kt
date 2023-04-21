@@ -21,6 +21,8 @@ import com.chat.utils.SystemBarUtils
 import com.chat.utils.resolveColor
 import com.chat.utils.resolveStyleRes
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,7 @@ internal class ChatFragment : Fragment() {
     private var sendButton: SendButton? = null
     private var messageListView: RecyclerView? = null
     private var messageAdapter: MessageAdapter? = null
+    private var suggestionsChipGroup: ChipGroup? = null
     private var multiSelectionActionMode: ActionMode? = null
 
     // Colors
@@ -110,6 +113,8 @@ internal class ChatFragment : Fragment() {
             this.adapter = adapter
         }
 
+        suggestionsChipGroup = view.findViewById(R.id.suggestions)
+
         observeViewModel(viewLifecycleOwner)
     }
 
@@ -120,6 +125,7 @@ internal class ChatFragment : Fragment() {
         sendButton = null
         messageListView = null
         messageAdapter = null
+        suggestionsChipGroup = null
     }
 
     private fun observeViewModel(owner: LifecycleOwner) = with(viewModel) {
@@ -135,6 +141,10 @@ internal class ChatFragment : Fragment() {
             messageAdapter?.submitList(pagedList) {
                 smoothScrollToLastMessage()
             }
+        }
+
+        suggestions.observe(owner) { suggestions ->
+            setSuggestions(suggestions)
         }
 
         error.observe(owner) { error ->
@@ -299,4 +309,17 @@ internal class ChatFragment : Fragment() {
 //            scrollView.smoothScrollBy(0, deltaScrollY, 400)
 //        }
 //    }
+
+    private fun setSuggestions(suggestions: List<String>?) {
+        val chipGroup = suggestionsChipGroup ?: return
+        chipGroup.removeAllViews()
+        suggestions?.forEach { text ->
+            val chip = Chip(chipGroup.context)
+            chip.text = text
+            chip.setOnClickListener {
+                viewModel.onSuggestionClick(text)
+            }
+            chipGroup.addView(chip)
+        }
+    }
 }

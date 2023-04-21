@@ -21,6 +21,22 @@ internal class ChatViewModel : ViewModel() {
         chat.getMessageListLiveData()
     }
 
+    private val messageCount: LiveData<Int> by lazy {
+        Transformations.switchMap(messagePagedList) { list ->
+            PagedListSizeLiveData(list)
+        }
+    }
+
+    val suggestions: LiveData<List<String>> by lazy {
+        Transformations.switchMap(messageCount) { count ->
+            MutableLiveData<List<String>>().apply {
+                viewModelScope.launch {
+                    value = if (count == 0) chat.getSuggestions() else emptyList()
+                }
+            }
+        }
+    }
+
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
@@ -42,6 +58,10 @@ internal class ChatViewModel : ViewModel() {
 
     private val _closeContextMenuEvent = OneShotLiveData<Unit>()
     val closeContextMenuEvent: LiveData<Unit> = _closeContextMenuEvent
+
+    fun onSuggestionClick(text: String) {
+        onSendMessageClick(text)
+    }
 
     fun onSendMessageClick(rawText: CharSequence?) {
         if (rawText.isNullOrBlank()) {

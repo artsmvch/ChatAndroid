@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat">Chat</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="copied_to_clipboard">Copié dans le presse-papier</string>
+    <string name="messages">Messages</string>
+    <string name="copy">Copier</string>
+    <string name="share">Partager</string>
+    <string name="delete">Supprimer</string>
+    <string name="input_field_hint">Poser une question</string>
+    <string name="copy_message">Copier le message</string>
+    <string name="copy_messages">Copier les messages</string>
+    <string name="share_message">Partager le message</string>
+    <string name="share_messages">Partager les messages</string>
+    <string name="delete_message">Supprimer le message</string>
+    <string name="delete_messages">Supprimer les messages</string>
+    <string name="delete_messages_confirmation">Voulez-vous supprimer les messages sélectionnés?</string>
+    <string name="user">User</string>
+    <string name="bot">Bot</string>
+    <string name="speaker">Haut-parleur</string>
+</resources>

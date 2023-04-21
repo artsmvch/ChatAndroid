@@ -172,7 +172,11 @@ internal class ChatViewModel(
     fun onSpeakerClick() {
         viewModelScope.launch {
             val muted = preferences.isSpeakerMuted()
-            preferences.setSpeakerMuted(!muted)
+            val newMuted = !muted
+            preferences.setSpeakerMuted(newMuted)
+            if (newMuted) {
+                speaker.stop()
+            }
         }
     }
 

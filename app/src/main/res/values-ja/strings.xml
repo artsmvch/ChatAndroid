@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="chat_suggestions">
+        <item>こんにちは！</item>
+        <item>冗談を言う</item>
+        <item>おとぎ話をする</item>
+    </string-array>
+</resources>

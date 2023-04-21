@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat">チャット</string>
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+    <string name="copied_to_clipboard">クリップボードにコピーしました</string>
+    <string name="messages">メッセージ</string>
+    <string name="copy">コピー</string>
+    <string name="share">共有</string>
+    <string name="delete">消去</string>
+    <string name="input_field_hint">何かについて尋ねる</string>
+    <string name="copy_message">メッセージをコピー</string>
+    <string name="copy_messages">メッセージをコピー</string>
+    <string name="share_message">メッセージを共有</string>
+    <string name="share_messages">メッセージを共有する</string>
+    <string name="delete_message">メッセージを削除</string>
+    <string name="delete_messages">メッセージを削除する</string>
+    <string name="delete_messages_confirmation">選択したメッセージを削除しますか?</string>
+    <string name="user">ユーザー</string>
+    <string name="bot">ボット</string>
+    <string name="speaker">スピーカー</string>
+</resources>

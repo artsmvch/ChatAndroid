@@ -8,6 +8,7 @@ import com.chat.ui.preferences.obtainPreferences
 import com.chat.ui.voice.Speaker
 import com.chat.ui.voice.obtainSpeaker
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -60,9 +61,12 @@ internal class ChatViewModel(
 
     val suggestions: LiveData<List<String>> by lazy {
         Transformations.switchMap(messageCount) { count ->
-            MutableLiveData<List<String>>().apply {
+            MutableLiveData<List<String>>(emptyList()).apply {
                 viewModelScope.launch {
-                    value = if (count == 0) chat.getSuggestions() else emptyList()
+                    if (count == 0) {
+                        delay(300L)
+                        value = chat.getSuggestions()
+                    }
                 }
             }
         }

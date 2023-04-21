@@ -69,7 +69,14 @@ internal class ChatFragment : Fragment() {
             ChatBackgroundLoader.load(imageView)
         }
 
-        toolbar = view.findViewById(R.id.toolbar)
+        toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar).apply {
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.speaker -> viewModel.onSpeakerClick()
+                }
+                false
+            }
+        }
 
         editText = view.findViewById<EditText>(R.id.edit_text).apply {
             setOnEditorActionListener { _, actionId, _ ->
@@ -178,6 +185,14 @@ internal class ChatFragment : Fragment() {
 
         closeContextMenuEvent.observe(owner) {
             multiSelectionActionMode?.finish()
+        }
+
+        isSpeakerMuted.observe(owner) { isMuted ->
+            toolbar?.menu?.findItem(R.id.speaker)?.also { item ->
+                item.setIcon(
+                    if (isMuted) R.drawable.ic_speaker_muted_24 else R.drawable.ic_speaker_24
+                )
+            }
         }
     }
 

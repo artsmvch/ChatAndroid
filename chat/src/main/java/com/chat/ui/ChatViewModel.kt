@@ -3,9 +3,12 @@ package com.chat.ui
 import android.content.Context
 import androidx.lifecycle.*
 import androidx.paging.PagedList
+import com.chat.ui.preferences.Preferences
+import com.chat.ui.preferences.obtainPreferences
 import com.chat.ui.voice.Speaker
 import com.chat.ui.voice.obtainSpeaker
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -16,6 +19,7 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             return ChatViewModel(
                 chat = ChatFeature.getChat(),
+                preferences = obtainPreferences(context),
                 speaker = obtainSpeaker(context)
             ) as T
         }
@@ -24,6 +28,7 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
 
 internal class ChatViewModel(
     private val chat: Chat,
+    private val preferences: Preferences,
     private val speaker: Speaker
 ) : ViewModel() {
 
@@ -35,6 +40,11 @@ internal class ChatViewModel(
         override fun onMessageSent(message: Message) {
         }
         override fun onMessageReceived(message: Message) {
+            viewModelScope.launch {
+                if (!preferences.isSpeakerMuted()) {
+                    speaker.speak(message)
+                }
+            }
         }
     }
 
@@ -83,6 +93,10 @@ internal class ChatViewModel(
 
     private val _closeContextMenuEvent = OneShotLiveData<Unit>()
     val closeContextMenuEvent: LiveData<Unit> = _closeContextMenuEvent
+
+    val isSpeakerMuted: LiveData<Boolean> by lazy {
+        preferences.isSpeakerMutedFlow().asLiveData(Dispatchers.Main)
+    }
 
     init {
         chat.addListener(chatListener)
@@ -153,6 +167,13 @@ internal class ChatViewModel(
 
     fun onMessageDeletionDeclined(messages: Collection<Message>) {
         _closeContextMenuEvent.setValue(Unit)
+    }
+
+    fun onSpeakerClick() {
+        viewModelScope.launch {
+            val muted = preferences.isSpeakerMuted()
+            preferences.setSpeakerMuted(!muted)
+        }
     }
 
     override fun onCleared() {

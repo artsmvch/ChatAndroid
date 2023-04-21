@@ -32,7 +32,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
                     app:layout_scrollFlags="noScroll"
-                    app:titleTextColor="?colorOnPrimary"/>
+                    app:titleTextColor="?colorOnPrimary"
+                    app:menu="@menu/menu_chat"/>
             </com.google.android.material.appbar.AppBarLayout>
 
             <androidx.recyclerview.widget.RecyclerView

@@ -17,4 +17,5 @@
     <string name="delete_messages_confirmation">Do you want to delete the selected messages?</string>
     <string name="user">User</string>
     <string name="bot">Bot</string>
+    <string name="speaker">Speaker</string>
 </resources>

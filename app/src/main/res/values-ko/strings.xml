@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="chat_suggestions">
+        <item>안녕하세요!</item>
+        <item>농담을 하다</item>
+        <item>동화를 말하다</item>
+    </string-array>
+</resources>

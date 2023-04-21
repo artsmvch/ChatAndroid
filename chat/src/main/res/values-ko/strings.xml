@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat">채팅</string>
+    <string name="ok">OK</string>
+    <string name="cancel">취소하다</string>
+    <string name="copied_to_clipboard">클립보드에 복사됨</string>
+    <string name="messages">메시지</string>
+    <string name="copy">베끼다</string>
+    <string name="share">공유하다</string>
+    <string name="delete">삭제</string>
+    <string name="input_field_hint">질문하기</string>
+    <string name="copy_message">메시지 복사</string>
+    <string name="copy_messages">메시지 복사</string>
+    <string name="share_message">메시지 공유</string>
+    <string name="share_messages">메시지 공유</string>
+    <string name="delete_message">메시지 삭제</string>
+    <string name="delete_messages">메시지 삭제</string>
+    <string name="delete_messages_confirmation">선택한 메시지를 삭제하시겠습니까?</string>
+    <string name="user">사용자</string>
+    <string name="bot">봇</string>
+    <string name="speaker">스피커</string>
+</resources>

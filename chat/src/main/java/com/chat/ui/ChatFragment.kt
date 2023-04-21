@@ -44,7 +44,8 @@ internal class ChatFragment : Fragment() {
     private var actionModeBackgroundColor: Int? = null
 
     private val viewModel: ChatViewModel by lazy {
-        val provider = ViewModelProvider(this)
+        val factory = ChatViewModelFactory(requireContext())
+        val provider = ViewModelProvider(this, factory)
         provider[ChatViewModel::class.java]
     }
 

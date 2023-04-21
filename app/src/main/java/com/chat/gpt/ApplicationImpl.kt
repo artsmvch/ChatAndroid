@@ -20,12 +20,11 @@ class ApplicationImpl : Application() {
     }
 
     private fun setupChat() {
-        val listeners = listOf(
-            AdvertisementChatListener {
-                activityLifecycleCallbacksImpl.lastCreatedActivity
-            },
-            FirebaseAnalyticsChatListener(this)
+        val chat = OpenAIChat(this)
+        chat.addListener(
+            AdvertisementChatListener { activityLifecycleCallbacksImpl.lastCreatedActivity }
         )
-        ChatFeature.init(OpenAIChat(this, listeners))
+        chat.addListener(FirebaseAnalyticsChatListener(this))
+        ChatFeature.init(chat)
     }
 }

@@ -11,6 +11,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -18,7 +19,6 @@ import kotlin.coroutines.suspendCoroutine
 
 class OpenAIChat constructor(
     private val context: Context,
-    private val listeners: List<Listener>
 ) : DatabaseChat(context, "openai"), Chat {
     private val config = OpenAIChatConfig(context, chatScope).apply { preload() }
 
@@ -30,6 +30,8 @@ class OpenAIChat constructor(
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
+
+    private val listeners = CopyOnWriteArraySet<Chat.Listener>()
 
     private fun createMessageRequest(message: String): Request {
         val apiKey = config.getApiKey()
@@ -97,7 +99,7 @@ class OpenAIChat constructor(
     override suspend fun sendMessage(text: String) {
         appendMessage(
             createMessage(isFromUser = true, text = text).also { msg ->
-                listeners.forEach { it.onMessageSent(msg) }
+                dispatchMessageSent(msg)
             }
         )
         return suspendCoroutine { continuation ->
@@ -107,7 +109,7 @@ class OpenAIChat constructor(
                         response.body.let(::parseMessageResponse)
                             .onSuccess { msg ->
                                 appendMessage(msg)
-                                listeners.forEach { it.onMessageReceived(msg) }
+                                dispatchMessageReceived(msg)
                                 continuation.resume(Unit)
                             }
                             .onFailure {
@@ -145,8 +147,19 @@ class OpenAIChat constructor(
         }
     }
 
-    interface Listener {
-        fun onMessageSent(message: Message)
-        fun onMessageReceived(message: Message)
+    override fun addListener(listener: Chat.Listener) {
+        listeners.add(listener)
+    }
+
+    override fun removeListener(listener: Chat.Listener) {
+        listeners.remove(listener)
+    }
+
+    private fun dispatchMessageSent(message: Message) {
+        listeners.forEach { it.onMessageSent(message) }
+    }
+
+    private fun dispatchMessageReceived(message: Message) {
+        listeners.forEach { it.onMessageReceived(message) }
     }
 }

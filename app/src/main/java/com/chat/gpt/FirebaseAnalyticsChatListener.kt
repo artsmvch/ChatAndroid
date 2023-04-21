@@ -2,13 +2,13 @@ package com.chat.gpt
 
 import android.app.Application
 import android.os.Bundle
-import com.chat.gpt.engine.OpenAIChat
+import com.chat.ui.Chat
 import com.chat.ui.Message
 import com.google.firebase.analytics.FirebaseAnalytics
 
 internal class FirebaseAnalyticsChatListener(
     private val application: Application
-) : OpenAIChat.Listener {
+) : Chat.Listener {
     override fun onMessageSent(message: Message) {
         FirebaseAnalytics.getInstance(application).logEvent("message_sent", EMPTY_BUNDLE)
     }

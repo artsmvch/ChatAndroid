@@ -4,7 +4,7 @@ import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.chat.firebase.FirebaseRemoteConfigCache
-import com.chat.gpt.engine.OpenAIChat
+import com.chat.ui.Chat
 import com.chat.ui.Message
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 internal class AdvertisementChatListener(
     private val foregroundActivityProvider: () -> Activity?
-) : OpenAIChat.Listener {
+) : Chat.Listener {
     private val sentMessageCount = AtomicInteger(0)
 
     override fun onMessageSent(message: Message) {

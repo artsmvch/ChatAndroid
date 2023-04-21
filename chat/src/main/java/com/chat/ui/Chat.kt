@@ -12,7 +12,15 @@ interface Chat {
     suspend fun sendMessage(text: String)
     suspend fun getSuggestions(): List<String>
 
+    fun addListener(listener: Listener)
+    fun removeListener(listener: Listener)
+
     interface Descriptor {
         val name: String
+    }
+
+    interface Listener {
+        fun onMessageSent(message: Message)
+        fun onMessageReceived(message: Message)
     }
 }

@@ -1,17 +1,42 @@
 package com.chat.ui
 
+import android.content.Context
 import androidx.lifecycle.*
 import androidx.paging.PagedList
+import com.chat.ui.voice.Speaker
+import com.chat.ui.voice.obtainSpeaker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class ChatViewModel : ViewModel() {
-    private val chat: Chat = ChatFeature.getChat()
+@Suppress("FunctionName")
+internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
+    return object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return ChatViewModel(
+                chat = ChatFeature.getChat(),
+                speaker = obtainSpeaker(context)
+            ) as T
+        }
+    }
+}
+
+internal class ChatViewModel(
+    private val chat: Chat,
+    private val speaker: Speaker
+) : ViewModel() {
 
 //    val messages: LiveData<List<Message>> by lazy {
 //        liveData { chat.getMessages().collect { emit(it) } }
 //    }
+
+    private val chatListener = object : Chat.Listener {
+        override fun onMessageSent(message: Message) {
+        }
+        override fun onMessageReceived(message: Message) {
+        }
+    }
 
     val chatName: LiveData<String> by lazy {
         MutableLiveData(chat.descriptor.name)
@@ -58,6 +83,10 @@ internal class ChatViewModel : ViewModel() {
 
     private val _closeContextMenuEvent = OneShotLiveData<Unit>()
     val closeContextMenuEvent: LiveData<Unit> = _closeContextMenuEvent
+
+    init {
+        chat.addListener(chatListener)
+    }
 
     fun onSuggestionClick(text: String) {
         onSendMessageClick(text)
@@ -124,5 +153,10 @@ internal class ChatViewModel : ViewModel() {
 
     fun onMessageDeletionDeclined(messages: Collection<Message>) {
         _closeContextMenuEvent.setValue(Unit)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        chat.removeListener(chatListener)
     }
 }

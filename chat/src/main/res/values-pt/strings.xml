@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat">Chat</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="copied_to_clipboard">Copiado para a área de transferência</string>
+    <string name="messages">Mensagens</string>
+    <string name="copy">Copiar</string>
+    <string name="share">Compartilhar</string>
+    <string name="delete">Excluir</string>
+    <string name="input_field_hint">Faça uma pergunta</string>
+    <string name="copy_message">Copiar mensagem</string>
+    <string name="copy_messages">Copiar mensagens</string>
+    <string name="share_message">Compartilhar mensagem</string>
+    <string name="share_messages">Compartilhar mensagens</string>
+    <string name="delete_message">Excluir mensagem</string>
+    <string name="delete_messages">Excluir mensagens</string>
+    <string name="delete_messages_confirmation">Deseja excluir as mensagens selecionadas?</string>
+    <string name="user">Usuário</string>
+    <string name="bot">Robô</string>
+    <string name="speaker">Palestrante</string>
+</resources>

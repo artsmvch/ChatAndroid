@@ -18,6 +18,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import com.chat.utils.SystemBarUtils
 import com.chat.utils.resolveColor
 import com.chat.utils.resolveStyleRes
@@ -335,6 +337,16 @@ internal class ChatFragment : Fragment() {
             }
             chipGroup.addView(chip)
         }
-        chipGroup.isVisible = !suggestions.isNullOrEmpty()
+        val visible = !suggestions.isNullOrEmpty()
+        // Animation works well only when the suggestion layout appears
+        if (visible) {
+            (view as? ViewGroup)?.also { sceneRoot ->
+                val transition = AutoTransition().apply {
+                    duration = 150L
+                }
+                TransitionManager.beginDelayedTransition(sceneRoot, transition)
+            }
+        }
+        chipGroup.isVisible = visible
     }
 }

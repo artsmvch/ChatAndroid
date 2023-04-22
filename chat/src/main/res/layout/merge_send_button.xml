@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:parentTag="com.chat.ui.SendButton">
+    tools:parentTag="com.chat.ui.views.SendButton">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/send_icon"

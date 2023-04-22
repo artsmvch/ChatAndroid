@@ -6,10 +6,13 @@ import androidx.paging.PagedList
 import com.chat.ui.preferences.Preferences
 import com.chat.ui.preferences.obtainPreferences
 import com.chat.ui.voice.Speaker
+import com.chat.ui.voice.SpeechToText
 import com.chat.ui.voice.obtainSpeaker
+import com.chat.ui.voice.obtainSpeechToText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,7 +24,8 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
             return ChatViewModel(
                 chat = ChatFeature.getChat(),
                 preferences = obtainPreferences(context),
-                speaker = obtainSpeaker(context)
+                speaker = obtainSpeaker(context),
+                speechToText = obtainSpeechToText(context)
             ) as T
         }
     }
@@ -30,7 +34,8 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
 internal class ChatViewModel(
     private val chat: Chat,
     private val preferences: Preferences,
-    private val speaker: Speaker
+    private val speaker: Speaker,
+    private val speechToText: SpeechToText
 ) : ViewModel() {
 
 //    val messages: LiveData<List<Message>> by lazy {
@@ -98,15 +103,37 @@ internal class ChatViewModel(
         preferences.isSpeakerMutedFlow().asLiveData(Dispatchers.Main)
     }
 
+    val isListeningToSpeech by lazy { speechToText.isListening.asLiveData(Dispatchers.Main) }
+
     init {
         chat.addListener(chatListener)
     }
 
     fun onSuggestionClick(text: String) {
-        onSendMessageClick(text)
+        proceedMessageText(text)
+    }
+
+    fun onMicrophoneButtonClick() {
+        viewModelScope.launch {
+            val isActuallyListening = speechToText.isListening.first()
+            if (isActuallyListening) {
+                speechToText.stopListening()
+            } else {
+                val flow = speechToText.startListening()
+                val tokens = flow.firstOrNull()
+                val text = withContext(Dispatchers.Default) {
+                    tokens?.joinToString(separator = " ")
+                }
+                proceedMessageText(text)
+            }
+        }
     }
 
     fun onSendMessageClick(rawText: CharSequence?) {
+        proceedMessageText(rawText)
+    }
+
+    private fun proceedMessageText(rawText: CharSequence?) {
         if (rawText.isNullOrBlank()) {
             return
         }
@@ -183,5 +210,10 @@ internal class ChatViewModel(
     override fun onCleared() {
         super.onCleared()
         chat.removeListener(chatListener)
+        speechToText.clear()
+    }
+
+    companion object {
+        private const val JOB_KEY = "listening_to_speech"
     }
 }

@@ -1,10 +1,11 @@
-package com.chat.ui
+package com.chat.ui.views
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
+import com.chat.ui.R
 
 internal class SendButton @JvmOverloads constructor(
     context: Context,

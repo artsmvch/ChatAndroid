@@ -1,6 +1,8 @@
 package com.chat.ui
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -11,6 +13,7 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,6 +23,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
+import com.chat.ui.views.MicrophoneButton
+import com.chat.ui.views.SendButton
 import com.chat.utils.SystemBarUtils
 import com.chat.utils.resolveColor
 import com.chat.utils.resolveStyleRes
@@ -33,6 +38,7 @@ import kotlinx.coroutines.launch
 internal class ChatFragment : Fragment() {
     private var toolbar: MaterialToolbar? = null
     private var editText: EditText? = null
+    private var microphoneButton: MicrophoneButton? = null
     private var sendButton: SendButton? = null
     private var messageListView: RecyclerView? = null
     private var messageAdapter: MessageAdapter? = null
@@ -91,6 +97,12 @@ internal class ChatFragment : Fragment() {
             }
         }
 
+        microphoneButton = view.findViewById<MicrophoneButton>(R.id.microphone_button).apply {
+            setOnClickListener {
+                handleMicrophoneButtonClick()
+            }
+        }
+
         sendButton = view.findViewById<SendButton>(R.id.send_button).apply {
             setOnClickListener {
                 triggerSendMessage()
@@ -133,6 +145,7 @@ internal class ChatFragment : Fragment() {
         super.onDestroyView()
         toolbar = null
         editText = null
+        microphoneButton = null
         sendButton = null
         messageListView = null
         messageAdapter = null
@@ -191,6 +204,11 @@ internal class ChatFragment : Fragment() {
                     if (isMuted) R.drawable.ic_speaker_muted_24 else R.drawable.ic_speaker_24
                 )
             }
+        }
+
+        isListeningToSpeech.observe(owner) { isListening ->
+            microphoneButton?.state =
+                if (isListening) MicrophoneButton.State.LISTENING else MicrophoneButton.State.IDLE
         }
     }
 
@@ -348,5 +366,34 @@ internal class ChatFragment : Fragment() {
             }
         }
         chipGroup.isVisible = visible
+    }
+
+    private fun handleMicrophoneButtonClick() {
+        val activity = this.activity ?: return
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), RC_MICROPHONE_BUTTON_CLICK)
+        } else {
+            viewModel.onMicrophoneButtonClick()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        for (i in permissions.indices) {
+            if (permissions[i] == Manifest.permission.RECORD_AUDIO) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    viewModel.onMicrophoneButtonClick()
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val RC_MICROPHONE_BUTTON_CLICK = 1337
     }
 }

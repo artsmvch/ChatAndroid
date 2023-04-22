@@ -4,17 +4,18 @@ import android.content.Context
 import androidx.lifecycle.*
 import androidx.paging.PagedList
 import com.chat.ui.preferences.Preferences
-import com.chat.ui.preferences.obtainPreferences
+import com.chat.ui.preferences.getPreferencesInstance
 import com.chat.ui.voice.Speaker
 import com.chat.ui.voice.SpeechToText
-import com.chat.ui.voice.obtainSpeaker
-import com.chat.ui.voice.obtainSpeechToText
+import com.chat.ui.voice.getSpeakerInstance
+import com.chat.ui.voice.getSpeechToTextInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 @Suppress("FunctionName")
 internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
@@ -23,9 +24,9 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             return ChatViewModel(
                 chat = ChatFeature.getChat(),
-                preferences = obtainPreferences(context),
-                speaker = obtainSpeaker(context),
-                speechToText = obtainSpeechToText(context)
+                preferences = getPreferencesInstance(context),
+                speaker = getSpeakerInstance(context),
+                speechToText = getSpeechToTextInstance(context)
             ) as T
         }
     }
@@ -119,7 +120,8 @@ internal class ChatViewModel(
             if (isActuallyListening) {
                 speechToText.stopListening()
             } else {
-                val flow = speechToText.startListening()
+                val locale = preferences.getLanguage()?.let { lang -> Locale(lang) }
+                val flow = speechToText.startListening(locale)
                 val tokens = flow.firstOrNull()
                 val text = withContext(Dispatchers.Default) {
                     tokens?.joinToString(separator = " ")

@@ -6,7 +6,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import com.chat.ui.Message
 
-internal fun obtainSpeaker(context: Context): Speaker {
+internal fun getSpeakerInstance(context: Context): Speaker {
     return TTSSpeakerImpl(context)
 }
 

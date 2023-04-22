@@ -12,25 +12,22 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.take
 import java.util.Locale
 
-internal fun obtainSpeechToText(
-    context: Context,
-    language: (() -> String?) = { null }
-): SpeechToText {
-    return SpeechToTextImpl(context, language)
+internal fun getSpeechToTextInstance(context: Context): SpeechToText {
+    return SpeechToTextImpl(context)
 }
 
 internal interface SpeechToText {
     val isListening: Flow<Boolean>
-    fun startListening(): Flow<List<String>>
+    fun startListening(locale: Locale? = null): Flow<List<String>>
     fun stopListening()
     fun clear()
 }
 
 private class SpeechToTextImpl(
-    private val context: Context,
-    private val language: () -> String?
+    private val context: Context
 ): SpeechToText {
     private val speechRecognizer: SpeechRecognizer =
         SpeechRecognizer.createSpeechRecognizer(context)
@@ -90,17 +87,16 @@ private class SpeechToTextImpl(
         })
     }
 
-    override fun startListening(): Flow<List<String>> {
+    override fun startListening(locale: Locale?): Flow<List<String>> {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(
             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
         )
-        val locale: Locale = language.invoke()?.let { lang -> Locale(lang) } ?: Locale.getDefault()
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, locale)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, locale ?: Locale.getDefault())
         speechRecognizer.startListening(intent)
         _isListeningStateFlow.tryEmit(true)
-        return _resultsSharedFlow
+        return _resultsSharedFlow.take(1)
     }
 
     override fun stopListening() {

@@ -5,13 +5,14 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import com.chat.ui.Message
+import java.util.Locale
 
 internal fun getSpeakerInstance(context: Context): Speaker {
     return TTSSpeakerImpl(context)
 }
 
 internal interface Speaker {
-    fun speak(message: Message)
+    fun speak(message: Message, locale: Locale? = null)
     fun stop()
 }
 
@@ -24,7 +25,7 @@ private class TTSSpeakerImpl(
             TextToSpeech.SUCCESS -> {
                 Log.d(LOG_TAG, "TextToSpeech initialized successfully")
                 initializationStatus = InitializationStatus.INITIALIZED
-                pendingMessage?.also(::speak)
+                pendingMessageWithLocale?.also { speak(it.message, it.locale) }
             }
             TextToSpeech.ERROR -> {
                 Log.e(LOG_TAG, "TextToSpeech failed to initialize")
@@ -34,11 +35,14 @@ private class TTSSpeakerImpl(
     }
     private val textToSpeech: TextToSpeech = TextToSpeech(context, ttsInitListener)
 
-    private var pendingMessage: Message? = null
+    private var pendingMessageWithLocale: MessageWithLocale? = null
 
-    override fun speak(message: Message) {
-        pendingMessage = null
+    override fun speak(message: Message, locale: Locale?) {
+        pendingMessageWithLocale = null
         if (initializationStatus == InitializationStatus.INITIALIZED) {
+            if (locale != null && textToSpeech.supports(locale)) {
+                textToSpeech.language = locale
+            }
             textToSpeech.speak(
                 message.text,
                 TextToSpeech.QUEUE_FLUSH,
@@ -46,12 +50,20 @@ private class TTSSpeakerImpl(
                 message.id.toString()
             )
         } else if (initializationStatus == InitializationStatus.INITIALIZING) {
-            pendingMessage = message
+            pendingMessageWithLocale = MessageWithLocale(message, locale)
+        }
+    }
+
+    private fun TextToSpeech.supports(locale: Locale): Boolean {
+        return this.isLanguageAvailable(locale).let { code ->
+            code == TextToSpeech.LANG_AVAILABLE ||
+                    code == TextToSpeech.LANG_COUNTRY_AVAILABLE ||
+                    code == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE
         }
     }
 
     override fun stop() {
-        pendingMessage = null
+        pendingMessageWithLocale = null
         textToSpeech.stop()
     }
 
@@ -61,6 +73,11 @@ private class TTSSpeakerImpl(
         INITIALIZED,
         FAILED_TO_INITIALIZE
     }
+
+    private class MessageWithLocale(
+        val message: Message,
+        val locale: Locale?
+    )
 
     companion object {
         private const val LOG_TAG = "TTSSpeakerImpl"

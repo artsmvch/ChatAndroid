@@ -49,7 +49,8 @@ internal class ChatViewModel(
         override fun onMessageReceived(message: Message) {
             viewModelScope.launch {
                 if (!preferences.isSpeakerMuted()) {
-                    speaker.speak(message)
+                    val locale = preferences.getLanguage()?.let { lang -> Locale(lang) }
+                    speaker.speak(message, locale)
                 }
             }
         }

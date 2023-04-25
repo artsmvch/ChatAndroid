@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
@@ -104,6 +103,7 @@ internal class ChatFragment : Fragment() {
         }
 
 //        microphoneButton = view.findViewById<MicrophoneButton>(R.id.microphone_button).apply {
+//            isVisible = isMicrophoneAvailable(context)
 //            setOnClickListener {
 //                handleMicrophoneButtonClick()
 //            }
@@ -376,6 +376,9 @@ internal class ChatFragment : Fragment() {
 
     private fun handleMicrophoneButtonClick() {
         val activity = this.activity ?: return
+        if (!isMicrophoneAvailable(activity)) {
+            return
+        }
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), RC_MICROPHONE_BUTTON_CLICK)
@@ -397,6 +400,10 @@ internal class ChatFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun isMicrophoneAvailable(context: Context): Boolean {
+        return context.packageManager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)
     }
 
     companion object {

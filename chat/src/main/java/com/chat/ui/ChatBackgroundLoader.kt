@@ -20,8 +20,8 @@ import kotlinx.coroutines.flow.collectLatest
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal object ChatBackgroundLoader {
-    private const val MIN_WIDTH = 800
-    private const val MIN_HEIGHT = 1440
+    private val RANGE_WIDTH = IntRange(400, 1400)
+    private val RANGE_HEIGHT = IntRange(800, 2800)
 
     private val backgroundFlow = MutableStateFlow<Drawable?>(null)
     private val isOrWillBeLoaded = AtomicBoolean(false)
@@ -38,8 +38,8 @@ internal object ChatBackgroundLoader {
         // Gotta know view size before getting background
         imageView.doOnLayout {
             val context = imageView.context
-            val targetWidth = imageView.measuredWidth.coerceAtLeast(MIN_WIDTH)
-            val targetHeight = imageView.measuredHeight.coerceAtLeast(MIN_HEIGHT)
+            val targetWidth = imageView.measuredWidth.coerceIn(RANGE_WIDTH)
+            val targetHeight = imageView.measuredHeight.coerceIn(RANGE_HEIGHT)
             GlobalScope.launch {
                 val drawableId = context.resolveDrawableId(R.attr.chatBackground)
                     ?: return@launch

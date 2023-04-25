@@ -97,11 +97,11 @@ internal class ChatFragment : Fragment() {
             }
         }
 
-        microphoneButton = view.findViewById<MicrophoneButton>(R.id.microphone_button).apply {
-            setOnClickListener {
-                handleMicrophoneButtonClick()
-            }
-        }
+//        microphoneButton = view.findViewById<MicrophoneButton>(R.id.microphone_button).apply {
+//            setOnClickListener {
+//                handleMicrophoneButtonClick()
+//            }
+//        }
 
         sendButton = view.findViewById<SendButton>(R.id.send_button).apply {
             setOnClickListener {

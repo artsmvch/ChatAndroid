@@ -9,14 +9,11 @@ import android.speech.SpeechRecognizer
 import android.util.Log
 import com.chat.ui.BuildConfig
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.*
 import java.util.Locale
 
 internal fun getSpeechToTextInstance(context: Context): SpeechToText {
-    return SpeechToTextImpl(context)
+    return SpeechToText.Stub //SpeechToTextImpl(context)
 }
 
 internal interface SpeechToText {
@@ -24,6 +21,13 @@ internal interface SpeechToText {
     fun startListening(locale: Locale? = null): Flow<List<String>>
     fun stopListening()
     fun clear()
+
+    object Stub : SpeechToText {
+        override val isListening: Flow<Boolean> = flowOf(false)
+        override fun startListening(locale: Locale?): Flow<List<String>> = flowOf(emptyList())
+        override fun stopListening() = Unit
+        override fun clear() = Unit
+    }
 }
 
 private class SpeechToTextImpl(

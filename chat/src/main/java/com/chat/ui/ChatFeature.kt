@@ -5,9 +5,11 @@ import java.util.concurrent.atomic.AtomicReference
 
 object ChatFeature {
     private val chatRef = AtomicReference<Chat>()
+    private val analyticsRef = AtomicReference<Analytics>()
 
-    fun init(chat: Chat) {
+    fun init(chat: Chat, analytics: Analytics = Analytics.Empty) {
         chatRef.set(chat)
+        analyticsRef.set(analytics)
     }
 
     fun isChatScreen(fragment: Fragment): Boolean {
@@ -18,7 +20,11 @@ object ChatFeature {
         return ChatFragment()
     }
 
-    internal fun getChat(): Chat {
+    internal fun requireChat(): Chat {
         return chatRef.get() ?: throw NullPointerException("Feature has not been initialized")
+    }
+
+    internal fun getAnalytics(): Analytics? {
+        return analyticsRef.get()
     }
 }

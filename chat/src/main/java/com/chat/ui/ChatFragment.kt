@@ -73,7 +73,10 @@ internal class ChatFragment : Fragment() {
     ): View? = inflater.inflate(R.layout.fragment_chat, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.findViewById<ImageView>(R.id.background).also { imageView ->
+        view.findViewById<SafeDrawingImageView>(R.id.background).also { imageView ->
+            imageView.onError = { err ->
+                ChatFeature.getAnalytics()?.onError(err)
+            }
             ChatBackgroundLoader.load(imageView)
         }
 

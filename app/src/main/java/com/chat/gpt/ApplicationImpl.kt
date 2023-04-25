@@ -2,8 +2,11 @@ package com.chat.gpt
 
 import android.app.Application
 import com.chat.gpt.engine.OpenAIChat
+import com.chat.ui.Analytics
 import com.chat.ui.ChatFeature
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 class ApplicationImpl : Application() {
     private val activityLifecycleCallbacksImpl = ActivityLifecycleCallbacksImpl()
@@ -25,6 +28,11 @@ class ApplicationImpl : Application() {
             AdvertisementChatListener { activityLifecycleCallbacksImpl.lastCreatedActivity }
         )
         chat.addListener(FirebaseAnalyticsChatListener(this))
-        ChatFeature.init(chat)
+        val analytics = object : Analytics {
+            override fun onError(e: Throwable) {
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+        ChatFeature.init(chat, analytics)
     }
 }

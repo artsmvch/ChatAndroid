@@ -23,7 +23,7 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             return ChatViewModel(
-                chat = ChatFeature.getChat(),
+                chat = ChatFeature.requireChat(),
                 preferences = getPreferencesInstance(context),
                 speaker = getSpeakerInstance(context),
                 speechToText = getSpeechToTextInstance(context)

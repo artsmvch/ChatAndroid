@@ -18,7 +18,7 @@ internal class SafeDrawingImageView @JvmOverloads constructor(
         try {
             super.onDraw(canvas)
         } catch (e: Throwable) {
-            Log.e(LOG_TAG, "Failed to draw wallpaper", e)
+            Log.e(LOG_TAG, "Failed to draw", e)
             onError?.invoke(e)
             if (BuildConfig.DEBUG) {
                 throw e
@@ -27,6 +27,6 @@ internal class SafeDrawingImageView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val LOG_TAG = "WallpaperImageView"
+        private const val LOG_TAG = "SafeDrawingImageView"
     }
 }

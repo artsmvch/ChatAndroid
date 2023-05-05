@@ -8,7 +8,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.chat.ui.Message
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 internal fun obtainMessageDatabase(context: Context, key: String): MessageDatabase {
@@ -16,7 +15,6 @@ internal fun obtainMessageDatabase(context: Context, key: String): MessageDataba
 }
 
 internal interface MessageDatabase {
-    fun queryMessages(): Flow<List<Message>>
     fun getMessageListLiveData(): LiveData<PagedList<Message>>
     suspend fun insertMessage(message: Message): Long
     suspend fun deleteMessages(messages: Collection<Message>)
@@ -30,10 +28,6 @@ private class MessageDatabaseImpl(
         Room.databaseBuilder(context, MessageRoomDatabase::class.java, "chat.$key.messages")
             .setJournalMode(RoomDatabase.JournalMode.AUTOMATIC)
             .build()
-    }
-
-    override fun queryMessages(): Flow<List<Message>> {
-        return database.getMessageDao().queryMessages()
     }
 
     override fun getMessageListLiveData(): LiveData<PagedList<Message>> {

@@ -3,7 +3,6 @@ package com.chat.ui.database
 import androidx.paging.DataSource
 import androidx.room.*
 import com.chat.ui.Message
-import kotlinx.coroutines.flow.Flow
 
 
 @Entity(
@@ -32,9 +31,6 @@ internal abstract class MessageRoomDatabase : RoomDatabase() {
 
 @Dao
 internal abstract class MessageDao {
-    @Query("SELECT * FROM messages")
-    abstract fun queryMessages(): Flow<List<MessageEntity>>
-
     @Query("SELECT * FROM messages")
     abstract fun getMessageDataSource(): DataSource.Factory<Int, MessageEntity>
 

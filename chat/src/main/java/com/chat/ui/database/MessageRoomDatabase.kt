@@ -19,7 +19,7 @@ internal data class MessageEntity(
     override val isFromUser: Boolean,
     @ColumnInfo("text")
     override val text: String,
-    @ColumnInfo("attachments")
+    @ColumnInfo("image_attachments")
     override val imageAttachments: ImageAttachments?
 ) : Message
 

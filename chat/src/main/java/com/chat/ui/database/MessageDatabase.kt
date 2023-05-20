@@ -6,6 +6,8 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.chat.ui.Message
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,6 +29,9 @@ private class MessageDatabaseImpl(
     private val database: MessageRoomDatabase by lazy {
         Room.databaseBuilder(context, MessageRoomDatabase::class.java, "chat.$key.messages")
             .setJournalMode(RoomDatabase.JournalMode.AUTOMATIC)
+//            .addTypeConverter(MessageDatabaseConverters())
+            // TODO: check the migration
+            .addMigrations(MIGRATION_1_2)
             .build()
     }
 
@@ -50,7 +55,8 @@ private class MessageDatabaseImpl(
             id = 0L,
             isFromUser = message.isFromUser,
             text = message.text,
-            timestamp = message.timestamp
+            timestamp = message.timestamp,
+            imageAttachments = message.imageAttachments
         )
         return database.getMessageDao().insertMessage(entity)
     }
@@ -63,3 +69,9 @@ private class MessageDatabaseImpl(
     }
 }
 
+private val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE messages " +
+                "ADD image_urls text")
+    }
+}

@@ -24,19 +24,33 @@
         app:cardElevation="1dp"
         app:rippleColor="@color/message_card_ripple">
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="14dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="14dp"
-            android:paddingBottom="10dp"
-            android:gravity="left|center_vertical"
-            android:textSize="16.5sp"
-            android:textAppearance="?textAppearanceBody1"
-            android:textColor="?messageForegroundColor"
-            tools:text="Message"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="14dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="10dp"
+                android:gravity="left|center_vertical"
+                android:textSize="16.5sp"
+                android:textAppearance="?textAppearanceBody1"
+                android:textColor="?messageForegroundColor"
+                tools:text="Message"/>
+
+            <com.chat.ui.views.ImageAttachmentView
+                android:id="@+id/image_attachment"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"/>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <TextView

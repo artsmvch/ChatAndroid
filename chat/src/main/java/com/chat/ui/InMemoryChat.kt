@@ -12,8 +12,6 @@ abstract class InMemoryChat : Chat {
     // ConflatedBroadcastChannel
     private val messages = MutableStateFlow<List<Message>>(emptyList())
 
-    final override fun getMessages(): Flow<List<Message>> = messages
-
     protected fun appendMessage(message: Message) {
         chatScope.launch(Dispatchers.Default) {
             synchronized(this@InMemoryChat) {

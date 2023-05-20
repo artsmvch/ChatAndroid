@@ -44,6 +44,10 @@ internal class ChatFragment : Fragment() {
     private var suggestionsChipGroup: ChipGroup? = null
     private var multiSelectionActionMode: ActionMode? = null
 
+    private var messageTypeChooserLayout: View? = null
+    private var generateTextButton: View? = null
+    private var generateImageButton: View? = null
+
     // Colors
     @ColorInt
     private var statusBarColor: Int? = null
@@ -144,6 +148,23 @@ internal class ChatFragment : Fragment() {
 
         suggestionsChipGroup = view.findViewById(R.id.suggestions)
 
+        view.findViewById<View?>(R.id.message_type_chooser)?.apply {
+            setOnClickListener {
+                viewModel.onMessageTypeChooserClick()
+            }
+        }
+        messageTypeChooserLayout = view.findViewById(R.id.message_type_chooser_layout)
+        generateTextButton = view.findViewById<View?>(R.id.generate_text)?.apply {
+            setOnClickListener {
+                viewModel.onTextMessageTypeClick()
+            }
+        }
+        generateImageButton = view.findViewById<View?>(R.id.generate_image)?.apply {
+            setOnClickListener {
+                viewModel.onImageMessageTypeClick()
+            }
+        }
+
         observeViewModel(viewLifecycleOwner)
     }
 
@@ -156,6 +177,9 @@ internal class ChatFragment : Fragment() {
         messageListView = null
         messageAdapter = null
         suggestionsChipGroup = null
+        messageTypeChooserLayout = null
+        generateTextButton = null
+        generateImageButton = null
     }
 
     private fun observeViewModel(owner: LifecycleOwner) = with(viewModel) {
@@ -215,6 +239,35 @@ internal class ChatFragment : Fragment() {
         isListeningToSpeech.observe(owner) { isListening ->
             microphoneButton?.state =
                 if (isListening) MicrophoneButton.State.LISTENING else MicrophoneButton.State.IDLE
+        }
+
+        isMessageTypeChooserVisible.observe(owner) { isVisible: Boolean? ->
+            (view as? ViewGroup)?.also { sceneRoot ->
+//                val slideEdge = if (isVisible == false) Gravity.TOP else Gravity.BOTTOM
+                val transition = AutoTransition().apply {
+                    duration = 80L
+//                    interpolator = AccelerateInterpolator()
+                }
+                TransitionManager.beginDelayedTransition(sceneRoot, transition)
+            }
+            messageTypeChooserLayout?.isVisible = isVisible ?: false
+        }
+
+        messageType.observe(owner) { type ->
+            when (type) {
+                ChatViewModel.MessageType.GENERATE_TEXT -> {
+                    generateTextButton?.isActivated = true
+                    generateImageButton?.isActivated = false
+                }
+                ChatViewModel.MessageType.GENERATE_IMAGE -> {
+                    generateTextButton?.isActivated = false
+                    generateImageButton?.isActivated = true
+                }
+                else -> {
+                    generateTextButton?.isEnabled = false
+                    generateImageButton?.isEnabled = false
+                }
+            }
         }
     }
 

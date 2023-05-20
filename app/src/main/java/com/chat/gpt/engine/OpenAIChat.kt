@@ -2,6 +2,7 @@ package com.chat.gpt.engine
 
 import android.content.Context
 import com.chat.gpt.R
+import com.chat.ui.ImageAttachments
 import com.chat.ui.Chat
 import com.chat.ui.DatabaseChat
 import com.chat.ui.Message
@@ -33,42 +34,6 @@ class OpenAIChat constructor(
 
     private val listeners = CopyOnWriteArraySet<Chat.Listener>()
 
-    private fun createMessageRequest(message: String): Request {
-        val apiKey = config.getApiKey()
-        val bodyJson = JSONObject().apply {
-            put("model", "gpt-3.5-turbo")
-            put("messages",
-                JSONArray().apply {
-                    put(
-                        JSONObject().apply {
-                            put("role", "user")
-                            put("content", message)
-                        }
-                    )
-                }
-            )
-        }
-        val body = bodyJson.toString().toRequestBody()
-        return Request.Builder()
-            .post(body)
-            .url("https://api.openai.com/v1/chat/completions")
-            .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer $apiKey")
-            .build()
-    }
-
-    private fun parseMessageResponse(body: ResponseBody?): Result<Message> {
-        return body.runCatching {
-            val json = JSONObject(body!!.string())
-            val choices = json.getJSONArray("choices")
-            val choice = choices.getJSONObject(0)
-            val message = choice.getJSONObject("message")
-            val content = message.getString("content")
-            val text = content.trimIndent().trim()
-            return@runCatching createMessage(isFromUser = false, text = text)
-        }
-    }
-
     private fun parseResponseError(response: Response): Throwable {
         val apiError = when (response.code) {
             401 -> ApiError.UNAUTHORIZED
@@ -83,51 +48,16 @@ class OpenAIChat constructor(
         return OpenAIApiException(apiError, message.ifBlank { response.message })
     }
 
-    private fun createMessage(isFromUser: Boolean, text: String): Message {
-        return object : Message {
-            override val id: Long = 0L
-            override val isFromUser: Boolean = isFromUser
-            override val text: String = text
-            override val timestamp: Long = System.currentTimeMillis()
-        }
-    }
-
     override val descriptor: Chat.Descriptor = object : Chat.Descriptor {
         override val name: String get() = ""//context.getString(R.string.chat_name)
     }
 
     override suspend fun sendMessage(text: String) {
-        appendMessage(
-            createMessage(isFromUser = true, text = text).also { msg ->
-                dispatchMessageSent(msg)
-            }
-        )
-        return suspendCoroutine { continuation ->
-            val callback = object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    if (response.isSuccessful) {
-                        response.body.let(::parseMessageResponse)
-                            .onSuccess { msg ->
-                                appendMessage(msg)
-                                dispatchMessageReceived(msg)
-                                continuation.resume(Unit)
-                            }
-                            .onFailure {
-                                continuation.resumeWithException(it)
-                            }
-                    } else {
-                        val error = parseResponseError(response)
-                        handleError(error)
-                        continuation.resumeWithException(error)
-                    }
-                }
+        return TextMessageSender().sendMessage(text)
+    }
 
-                override fun onFailure(call: Call, e: IOException) {
-                    continuation.resumeWithException(e)
-                }
-            }
-            client.newCall(createMessageRequest(text.toString())).enqueue(callback)
-        }
+    override suspend fun generateImage(text: String) {
+        return ImageGenerator().sendMessage(text)
     }
 
     private fun handleError(error: Throwable) {
@@ -161,5 +91,132 @@ class OpenAIChat constructor(
 
     private fun dispatchMessageReceived(message: Message) {
         listeners.forEach { it.onMessageReceived(message) }
+    }
+
+    private abstract inner class MessageSender {
+        suspend fun sendMessage(text: String) {
+            appendMessage(
+                createMessage(isFromUser = true, text = text).also { msg ->
+                    dispatchMessageSent(msg)
+                }
+            )
+            return suspendCoroutine { continuation ->
+                val callback = object : Callback {
+                    override fun onResponse(call: Call, response: Response) {
+                        if (response.isSuccessful) {
+                            kotlin.runCatching { parseMessageResponse(response.body!!) }
+                                .onSuccess { msg ->
+                                    appendMessage(msg)
+                                    dispatchMessageReceived(msg)
+                                    continuation.resume(Unit)
+                                }
+                                .onFailure {
+                                    continuation.resumeWithException(it)
+                                }
+                        } else {
+                            val error = parseResponseError(response)
+                            handleError(error)
+                            continuation.resumeWithException(error)
+                        }
+                    }
+
+                    override fun onFailure(call: Call, e: IOException) {
+                        continuation.resumeWithException(e)
+                    }
+                }
+                client.newCall(createMessageRequest(text)).enqueue(callback)
+            }
+        }
+
+        protected fun createMessage(
+            isFromUser: Boolean,
+            text: String,
+            imageAttachments: ImageAttachments? = null
+        ): Message {
+            return object : Message {
+                override val id: Long = 0L
+                override val timestamp: Long = System.currentTimeMillis()
+                override val isFromUser: Boolean = isFromUser
+                override val text: String = text
+                override val imageAttachments: ImageAttachments? = imageAttachments
+            }
+        }
+
+        abstract fun createMessageRequest(text: String): Request
+        @Throws(Exception::class)
+        abstract fun parseMessageResponse(body: ResponseBody): Message
+    }
+
+    private inner class TextMessageSender : MessageSender() {
+        override fun createMessageRequest(text: String): Request {
+            val apiKey = config.getApiKey()
+            val bodyJson = JSONObject().apply {
+                put("model", "gpt-3.5-turbo")
+                put("messages",
+                    JSONArray().apply {
+                        put(
+                            JSONObject().apply {
+                                put("role", "user")
+                                put("content", text)
+                            }
+                        )
+                    }
+                )
+            }
+            val body = bodyJson.toString().toRequestBody()
+            return Request.Builder()
+                .post(body)
+                .url("https://api.openai.com/v1/chat/completions")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer $apiKey")
+                .build()
+        }
+
+        @Throws(Exception::class)
+        override fun parseMessageResponse(body: ResponseBody): Message {
+            val json = JSONObject(body.string())
+            val choices = json.getJSONArray("choices")
+            val choice = choices.getJSONObject(0)
+            val message = choice.getJSONObject("message")
+            val content = message.getString("content")
+            val text = content.trimIndent().trim()
+            return createMessage(isFromUser = false, text = text)
+        }
+
+    }
+
+    private inner class ImageGenerator : MessageSender() {
+        override fun createMessageRequest(text: String): Request {
+            val apiKey = config.getApiKey()
+            val bodyJson = JSONObject().apply {
+                put("prompt", text)
+                put("n", 1)
+                put("size", "1024x1024")
+            }
+            val body = bodyJson.toString().toRequestBody()
+            return Request.Builder()
+                .post(body)
+                .url("https://api.openai.com/v1/images/generations")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer $apiKey")
+                .build()
+        }
+
+        @Throws(Exception::class)
+        override fun parseMessageResponse(body: ResponseBody): Message {
+            val json = JSONObject(body.string())
+            val data = json.getJSONArray("data")
+            val imageUrls = ArrayList<String>(1)
+            for (i in 0 until data.length()) {
+                val url = data.optJSONObject(i)?.optString("url")
+                if (!url.isNullOrBlank()) {
+                    imageUrls.add(url)
+                }
+            }
+            val imageAttachments = object : ImageAttachments {
+                override val imageUrls: List<String> = imageUrls
+            }
+            return createMessage(isFromUser = false, text = "", imageAttachments = imageAttachments)
+        }
     }
 }

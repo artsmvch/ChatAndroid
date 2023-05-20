@@ -19,4 +19,6 @@
     <string name="user">User</string>
     <string name="bot">Bot</string>
     <string name="speaker">Speaker</string>
+    <string name="text">Text</string>
+    <string name="image">Image</string>
 </resources>

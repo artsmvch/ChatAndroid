@@ -47,4 +47,6 @@ dependencies {
     implementation 'net.danlew:android.joda:2.12.1.1'
 
     implementation 'com.github.alexeiartsimovich:ContentCoroutines:v1.1.0'
+
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
 }

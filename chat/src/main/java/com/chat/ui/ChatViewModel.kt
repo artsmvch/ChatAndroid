@@ -107,6 +107,12 @@ internal class ChatViewModel(
 
     val isListeningToSpeech by lazy { speechToText.isListening.asLiveData(Dispatchers.Main) }
 
+    private val _isMessageTypeChooserVisible = MutableLiveData<Boolean>(false)
+    val isMessageTypeChooserVisible: LiveData<Boolean> get() = _isMessageTypeChooserVisible
+
+    private val _messageType = MutableLiveData<MessageType>(MessageType.GENERATE_TEXT)
+    val messageType: LiveData<MessageType> get() = _messageType
+
     init {
         chat.addListener(chatListener)
     }
@@ -146,8 +152,14 @@ internal class ChatViewModel(
             val text: String = withContext(Dispatchers.Default) {
                 rawText.toString().trimIndent().trim()
             }
-            chat.runCatching { sendMessage(text) }
-                .onFailure { _error.setValue(it) }
+            val messageType = messageType.value
+            chat.runCatching {
+                if (messageType == MessageType.GENERATE_IMAGE) {
+                    generateImage(text)
+                } else {
+                    sendMessage(text)
+                }
+            }.onFailure { _error.setValue(it) }
             _isLoading.value = false
         }
     }
@@ -210,10 +222,27 @@ internal class ChatViewModel(
         }
     }
 
+    fun onMessageTypeChooserClick() {
+        _isMessageTypeChooserVisible.value = (_isMessageTypeChooserVisible.value ?: false).not()
+    }
+
+    fun onTextMessageTypeClick() {
+        _messageType.value = MessageType.GENERATE_TEXT
+    }
+
+    fun onImageMessageTypeClick() {
+        _messageType.value = MessageType.GENERATE_IMAGE
+    }
+
     override fun onCleared() {
         super.onCleared()
         chat.removeListener(chatListener)
         speechToText.clear()
+    }
+
+    enum class MessageType {
+        GENERATE_TEXT,
+        GENERATE_IMAGE
     }
 
     companion object {

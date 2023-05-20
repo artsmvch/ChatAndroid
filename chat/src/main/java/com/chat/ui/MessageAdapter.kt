@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.GravityInt
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.chat.ui.views.ImageAttachmentView
 import com.chat.utils.dp
 import com.chat.utils.resolveColor
 import com.google.android.material.card.MaterialCardView
@@ -103,7 +105,9 @@ internal class MessageAdapter constructor(
 //        private val frameLayout = itemView as FrameLayout
         private val linearLayout = itemView as LinearLayout
         private val cardView: MaterialCardView = itemView.findViewById(R.id.card)
+        private val contentLayout: LinearLayout = itemView.findViewById(R.id.content)
         private val textView: TextView
+        private val imageAttachmentView: ImageAttachmentView = itemView.findViewById(R.id.image_attachment)
         private val dateView: TextView = itemView.findViewById(R.id.date)
         private val horizontalPadding = itemView.context.dp(32)
         private val messageBackgroundColor = itemView.context.resolveColor(R.attr.messageBackgroundColor)
@@ -163,7 +167,14 @@ internal class MessageAdapter constructor(
                     this.gravity = contentGravity
                 }
                 cardView.checkedIconGravity = checkedIconGravity
-                textView.text = item.text
+                textView.apply {
+                    isVisible = item.text.isNotBlank()
+                    text = item.text
+                }
+                imageAttachmentView.apply {
+                    isVisible = !item.imageAttachments?.imageUrls.isNullOrEmpty()
+                    bind(item.imageAttachments)
+                }
                 dateView.text = MessageDateUtils.getDateText(item)
                 dateView.updateLayoutParams<LinearLayout.LayoutParams> {
                     this.gravity = contentGravity
@@ -179,7 +190,14 @@ internal class MessageAdapter constructor(
                 cardView.updateLayoutParams<LinearLayout.LayoutParams> {
                     gravity = Gravity.CENTER
                 }
-                textView.text = null
+                textView.apply {
+                    isVisible = false
+                    text = null
+                }
+                imageAttachmentView.apply {
+                    isVisible = false
+                    bind(null)
+                }
                 dateView.text = null
                 linearLayout.updatePadding(
                     left = horizontalPadding,

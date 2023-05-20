@@ -29,8 +29,6 @@ private class MessageDatabaseImpl(
     private val database: MessageRoomDatabase by lazy {
         Room.databaseBuilder(context, MessageRoomDatabase::class.java, "chat.$key.messages")
             .setJournalMode(RoomDatabase.JournalMode.AUTOMATIC)
-//            .addTypeConverter(MessageDatabaseConverters())
-            // TODO: check the migration
             .addMigrations(MIGRATION_1_2)
             .build()
     }

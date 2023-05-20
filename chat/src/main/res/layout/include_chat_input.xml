@@ -59,7 +59,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:padding="8dp"
-                app:srcCompat="@drawable/ic_message_type_chooser_24"/>
+                app:srcCompat="@drawable/ic_message_type_chooser_24"
+                app:tint="@color/message_type_button_tint"/>
         </LinearLayout>
 
         <com.chat.ui.views.SendButton

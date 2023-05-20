@@ -44,6 +44,7 @@ internal class ChatFragment : Fragment() {
     private var suggestionsChipGroup: ChipGroup? = null
     private var multiSelectionActionMode: ActionMode? = null
 
+    private var messageTypeChooserButton: View? = null
     private var messageTypeChooserLayout: View? = null
     private var generateTextButton: View? = null
     private var generateImageButton: View? = null
@@ -148,7 +149,7 @@ internal class ChatFragment : Fragment() {
 
         suggestionsChipGroup = view.findViewById(R.id.suggestions)
 
-        view.findViewById<View?>(R.id.message_type_chooser)?.apply {
+        messageTypeChooserButton = view.findViewById<View?>(R.id.message_type_chooser)?.apply {
             setOnClickListener {
                 viewModel.onMessageTypeChooserClick()
             }
@@ -177,6 +178,7 @@ internal class ChatFragment : Fragment() {
         messageListView = null
         messageAdapter = null
         suggestionsChipGroup = null
+        messageTypeChooserButton = null
         messageTypeChooserLayout = null
         generateTextButton = null
         generateImageButton = null
@@ -242,6 +244,7 @@ internal class ChatFragment : Fragment() {
         }
 
         isMessageTypeChooserVisible.observe(owner) { isVisible: Boolean? ->
+            val isActuallyVisible = isVisible ?: false
             (view as? ViewGroup)?.also { sceneRoot ->
 //                val slideEdge = if (isVisible == false) Gravity.TOP else Gravity.BOTTOM
                 val transition = AutoTransition().apply {
@@ -250,7 +253,8 @@ internal class ChatFragment : Fragment() {
                 }
                 TransitionManager.beginDelayedTransition(sceneRoot, transition)
             }
-            messageTypeChooserLayout?.isVisible = isVisible ?: false
+            messageTypeChooserLayout?.isVisible = isActuallyVisible
+            messageTypeChooserButton?.isActivated = isActuallyVisible
         }
 
         messageType.observe(owner) { type ->

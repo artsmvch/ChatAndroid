@@ -262,14 +262,17 @@ internal class ChatFragment : Fragment() {
                 ChatViewModel.MessageType.GENERATE_TEXT -> {
                     generateTextButton?.isActivated = true
                     generateImageButton?.isActivated = false
+                    editText?.setHint(R.string.generate_text)
                 }
                 ChatViewModel.MessageType.GENERATE_IMAGE -> {
                     generateTextButton?.isActivated = false
                     generateImageButton?.isActivated = true
+                    editText?.setHint(R.string.generate_image)
                 }
                 else -> {
                     generateTextButton?.isEnabled = false
                     generateImageButton?.isEnabled = false
+                    editText?.hint = ""
                 }
             }
         }

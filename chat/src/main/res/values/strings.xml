@@ -20,5 +20,7 @@
     <string name="bot">Bot</string>
     <string name="speaker">Speaker</string>
     <string name="text">Text</string>
+    <string name="generate_text">Generate text</string>
     <string name="image">Image</string>
+    <string name="generate_image">Generate image</string>
 </resources>

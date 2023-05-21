@@ -24,7 +24,7 @@ internal class MessageImageViewerDialog : DialogFragment() {
         return AppCompatDialog(requireContext(), theme).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setContentView(R.layout.dialog_message_image_viewer)
-            val imageUrls = arguments?.getStringArrayList(ARG_IMAGE_URLS).orEmpty().let { it + it + it }
+            val imageUrls = arguments?.getStringArrayList(ARG_IMAGE_URLS).orEmpty()
             findViewById<ViewPager2>(R.id.view_pager)?.also { viewPager ->
                 viewPager.adapter = MessageImageAdapter(imageUrls)
                 findViewById<TabLayout>(R.id.tabs)?.also { tabs ->

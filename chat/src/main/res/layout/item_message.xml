@@ -47,7 +47,7 @@
             <com.chat.ui.views.ImageAttachmentView
                 android:id="@+id/image_attachment"
                 android:layout_width="240dp"
-                android:layout_height="240dp"
+                android:layout_height="272dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"/>
         </LinearLayout>

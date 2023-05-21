@@ -387,8 +387,10 @@ internal class ChatFragment : Fragment() {
     private fun showContextMenu(item: Message, itemView: View) {
         val popup = PopupMenu(itemView.context, itemView)
         popup.inflate(R.menu.menu_message)
+        popup.menu.findItem(R.id.view_images)?.isVisible = !item.imageAttachments?.imageUrls.isNullOrEmpty()
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.view_images -> viewImages(item)
                 R.id.copy -> viewModel.onCopyMessageClick(item)
                 R.id.share -> viewModel.onShareMessageClick(item)
                 R.id.delete -> viewModel.onDeleteMessageClick(item)
@@ -408,6 +410,10 @@ internal class ChatFragment : Fragment() {
 //            scrollView.smoothScrollBy(0, deltaScrollY, 400)
 //        }
 //    }
+
+    private fun viewImages(message: Message) {
+        MessageImageViewerDialog.show(childFragmentManager, message)
+    }
 
     private fun setSuggestions(suggestions: List<String>?) {
         val chipGroup = suggestionsChipGroup ?: return

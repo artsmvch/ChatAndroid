@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <layer-list>
+            <item>
+                <shape
+                    android:innerRadius="0dp"
+                    android:shape="ring"
+                    android:thickness="@dimen/pager_indicator_radius"
+                    android:useLevel="false">
+                    <solid android:color="#aaa"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <item>
+        <layer-list>
+            <item>
+                <shape
+                    android:innerRadius="0dp"
+                    android:shape="ring"
+                    android:thickness="@dimen/pager_indicator_radius"
+                    android:useLevel="false">
+                    <solid android:color="#ddd"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

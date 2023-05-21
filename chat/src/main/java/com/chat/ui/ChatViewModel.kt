@@ -3,6 +3,8 @@ package com.chat.ui
 import android.content.Context
 import androidx.lifecycle.*
 import androidx.paging.PagedList
+import com.chat.ui.download.MessageAttachmentsDownloader
+import com.chat.ui.download.getMessageAttachmentsDownloader
 import com.chat.ui.preferences.Preferences
 import com.chat.ui.preferences.getPreferencesInstance
 import com.chat.ui.voice.Speaker
@@ -25,6 +27,7 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
             return ChatViewModel(
                 chat = ChatFeature.requireChat(),
                 preferences = getPreferencesInstance(context),
+                messageAttachmentsDownloader = getMessageAttachmentsDownloader(context),
                 speaker = getSpeakerInstance(context),
                 speechToText = getSpeechToTextInstance(context)
             ) as T
@@ -35,6 +38,7 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
 internal class ChatViewModel(
     private val chat: Chat,
     private val preferences: Preferences,
+    private val messageAttachmentsDownloader: MessageAttachmentsDownloader,
     private val speaker: Speaker,
     private val speechToText: SpeechToText
 ) : ViewModel() {
@@ -162,6 +166,10 @@ internal class ChatViewModel(
             }.onFailure { _error.setValue(it) }
             _isLoading.value = false
         }
+    }
+
+    fun onDownloadMessageImagesClick(message: Message) {
+        messageAttachmentsDownloader.downloadImages(message)
     }
 
     fun onCopyMessageClick(message: Message) {

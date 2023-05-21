@@ -11,6 +11,7 @@
     <string name="input_field_hint">Ask a question</string>
     <string name="copy_message">Copy message</string>
     <string name="view_images">View images</string>
+    <string name="download_images">Download images</string>
     <string name="copy_messages">Copy messages</string>
     <string name="share_message">Share message</string>
     <string name="share_messages">Share messages</string>
@@ -24,4 +25,5 @@
     <string name="generate_text">Generate text</string>
     <string name="image">Image</string>
     <string name="generate_image">Generate image</string>
+    <string name="image_download_description">Downloading generated images…</string>
 </resources>

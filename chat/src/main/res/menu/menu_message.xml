@@ -6,6 +6,11 @@
         android:visible="false"/>
 
     <item
+        android:id="@+id/download_images"
+        android:title="@string/download_images"
+        android:visible="false"/>
+
+    <item
         android:id="@+id/copy"
         android:title="@string/copy_message"
         android:icon="@drawable/ic_copy_24"/>

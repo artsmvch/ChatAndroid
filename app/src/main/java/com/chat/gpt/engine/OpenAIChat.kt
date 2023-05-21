@@ -1,6 +1,9 @@
 package com.chat.gpt.engine
 
+import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
+import android.os.Environment
 import com.chat.gpt.R
 import com.chat.ui.ImageAttachments
 import com.chat.ui.Chat
@@ -11,6 +14,7 @@ import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
 import java.io.IOException
 import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.TimeUnit
@@ -85,19 +89,41 @@ class OpenAIChat constructor(
         listeners.remove(listener)
     }
 
-    private fun dispatchMessageSent(message: Message) {
+    private fun onMessageSent(message: Message) {
         listeners.forEach { it.onMessageSent(message) }
     }
 
-    private fun dispatchMessageReceived(message: Message) {
+    private fun onMessageReceived(message: Message) {
+        message.imageAttachments?.imageUrls?.also { urls -> downloadImages(urls) }
         listeners.forEach { it.onMessageReceived(message) }
+    }
+
+    private fun downloadImages(urls: List<String>) {
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as? DownloadManager
+            ?: return
+        urls.forEach { url ->
+            val folderName = "chatty_ai_bot"
+            val fileName = "image-${System.currentTimeMillis()}.png"
+            val subPath = File.separator + folderName + File.separator + fileName
+            val request = DownloadManager.Request(Uri.parse(url))
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+                .setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS, subPath
+                )
+                .apply { allowScanningByMediaScanner() }
+                .setTitle(fileName)
+                .setDescription(context.getString(com.chat.ui.R.string.image_download_description))
+                .setAllowedOverMetered(true)
+                .setAllowedOverRoaming(true)
+            downloadManager.enqueue(request)
+        }
     }
 
     private abstract inner class MessageSender {
         suspend fun sendMessage(text: String) {
             appendMessage(
                 createMessage(isFromUser = true, text = text).also { msg ->
-                    dispatchMessageSent(msg)
+                    onMessageSent(msg)
                 }
             )
             return suspendCoroutine { continuation ->
@@ -107,7 +133,7 @@ class OpenAIChat constructor(
                             kotlin.runCatching { parseMessageResponse(response.body!!) }
                                 .onSuccess { msg ->
                                     appendMessage(msg)
-                                    dispatchMessageReceived(msg)
+                                    onMessageReceived(msg)
                                     continuation.resume(Unit)
                                 }
                                 .onFailure {

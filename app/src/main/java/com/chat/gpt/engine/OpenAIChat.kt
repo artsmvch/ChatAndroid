@@ -2,26 +2,36 @@ package com.chat.gpt.engine
 
 import android.app.DownloadManager
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import com.chat.gpt.R
-import com.chat.ui.ImageAttachments
 import com.chat.ui.Chat
 import com.chat.ui.DatabaseChat
+import com.chat.ui.ImageAttachments
 import com.chat.ui.ImageInfo
 import com.chat.ui.Message
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+
 
 class OpenAIChat constructor(
     private val context: Context,
@@ -107,7 +117,23 @@ class OpenAIChat constructor(
     }
 
     private fun downloadImagesToInternalDir(images: List<ImageInfo>) {
-        // TODO: download files here
+        images.forEach { info ->
+            GlobalScope.launch(Dispatchers.IO) {
+                val imageUrl = info.imageUrl ?: return@launch
+                val filepath = info.filepath ?: return@launch
+                try {
+                    val connection: HttpURLConnection = URL(imageUrl).openConnection() as HttpURLConnection
+                    connection.connect()
+                    val inputStream = connection.inputStream
+                    val bufferedInputStream = BufferedInputStream(inputStream)
+                    val bitmap = BitmapFactory.decodeStream(bufferedInputStream)
+                    FileOutputStream(filepath).use { out ->
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                    }
+                } catch (ignored: Exception) {
+                }
+            }
+        }
     }
 
     private fun downloadImagesToExternalDir(images: List<ImageInfo>) {

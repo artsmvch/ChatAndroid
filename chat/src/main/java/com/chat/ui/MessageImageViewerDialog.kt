@@ -24,12 +24,12 @@ internal class MessageImageViewerDialog : DialogFragment() {
         return AppCompatDialog(requireContext(), theme).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             setContentView(R.layout.dialog_message_image_viewer)
-            val imageUrls = arguments?.getStringArrayList(ARG_IMAGE_URLS).orEmpty()
+            val images = (arguments?.getSerializable(ARG_IMAGES) as? List<ImageInfo>).orEmpty()
             findViewById<ViewPager2>(R.id.view_pager)?.also { viewPager ->
-                viewPager.adapter = MessageImageAdapter(imageUrls)
+                viewPager.adapter = MessageImageAdapter(images)
                 findViewById<TabLayout>(R.id.tabs)?.also { tabs ->
                     TabLayoutMediator(tabs, viewPager) { _, _ -> }.attach()
-                    tabs.isVisible = imageUrls.count() > 1
+                    tabs.isVisible = images.count() > 1
                 }
             }
             setWindowSize(
@@ -41,12 +41,12 @@ internal class MessageImageViewerDialog : DialogFragment() {
 
     companion object {
         private const val FRAGMENT_TAG = "message_image_viewer"
-        private const val ARG_IMAGE_URLS = "image_urls"
+        private const val ARG_IMAGES = "images"
 
         fun show(fragmentManager: FragmentManager, message: Message) {
             val args = Bundle(1)
-            val imageUrls = ArrayList(message.imageAttachments?.imageUrls.orEmpty())
-            args.putStringArrayList(ARG_IMAGE_URLS, imageUrls)
+            val images = ArrayList(message.imageAttachments?.images.orEmpty())
+            args.putSerializable(ARG_IMAGES, images)
             val dialog = MessageImageViewerDialog().apply { arguments = args }
             dialog.show(fragmentManager, FRAGMENT_TAG)
         }
@@ -54,10 +54,10 @@ internal class MessageImageViewerDialog : DialogFragment() {
 }
 
 private class MessageImageAdapter(
-    private val imageUrls: List<String>
+    private val images: List<ImageInfo>
 ): Adapter<MessageImageAdapter.ViewHolder>() {
 
-    override fun getItemCount(): Int = imageUrls.count()
+    override fun getItemCount(): Int = images.count()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = ImageView(parent.context)
@@ -69,15 +69,18 @@ private class MessageImageAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(imageUrls[position])
+        holder.bind(images[position])
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val imageView = itemView as ImageView
 
-        fun bind(imageUrl: String) {
+        fun bind(image: ImageInfo) {
             Glide.with(imageView)
-                .load(imageUrl)
+                .load(image.imageUrl)
+                .error(
+                    Glide.with(imageView).load(image.filepath)
+                )
                 .into(imageView)
         }
     }

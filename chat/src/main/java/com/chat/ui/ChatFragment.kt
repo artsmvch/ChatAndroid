@@ -385,7 +385,7 @@ internal class ChatFragment : Fragment() {
     }
 
     private fun showContextMenu(item: Message, itemView: View) {
-        val containsImages = !item.imageAttachments?.imageUrls.isNullOrEmpty()
+        val containsImages = !item.imageAttachments?.images.isNullOrEmpty()
         val popup = PopupMenu(itemView.context, itemView)
         popup.inflate(R.menu.menu_message)
         popup.menu.findItem(R.id.view_images)?.isVisible = containsImages

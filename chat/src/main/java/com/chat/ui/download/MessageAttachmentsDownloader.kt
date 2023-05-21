@@ -22,14 +22,15 @@ internal interface MessageAttachmentsDownloader {
     fun downloadImages(message: Message): Boolean
 }
 
+@Deprecated("Not tested")
 private class DefaultMessageAttachmentDownloader(
     private val context: Context,
 ): MessageAttachmentsDownloader {
     override fun downloadImages(message: Message): Boolean {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as? DownloadManager
             ?: return false
-        val imageUrls = message.imageAttachments?.imageUrls
-        if (imageUrls.isNullOrEmpty()) {
+        val images = message.imageAttachments?.images
+        if (images.isNullOrEmpty()) {
             return false
         }
 
@@ -47,7 +48,7 @@ private class DefaultMessageAttachmentDownloader(
         }
         context.registerReceiver(downloadListener, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        imageUrls.forEach { imageUrl ->
+        images.mapNotNull { it.imageUrl }.forEach { imageUrl ->
             val folderName = "chatty_ai_bot"
             val fileName = "image-${System.currentTimeMillis()}.png"
             val subPath = File.separator + folderName + File.separator + fileName

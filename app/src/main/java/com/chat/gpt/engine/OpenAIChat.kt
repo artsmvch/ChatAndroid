@@ -8,6 +8,7 @@ import com.chat.gpt.R
 import com.chat.ui.ImageAttachments
 import com.chat.ui.Chat
 import com.chat.ui.DatabaseChat
+import com.chat.ui.ImageInfo
 import com.chat.ui.Message
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import okhttp3.*
@@ -37,6 +38,10 @@ class OpenAIChat constructor(
     }
 
     private val listeners = CopyOnWriteArraySet<Chat.Listener>()
+
+    private fun getImageDir(): File {
+        return File(context.filesDir, "generated_images").apply { mkdirs() }
+    }
 
     private fun parseResponseError(response: Response): Throwable {
         val apiError = when (response.code) {
@@ -94,18 +99,25 @@ class OpenAIChat constructor(
     }
 
     private fun onMessageReceived(message: Message) {
-        message.imageAttachments?.imageUrls?.also { urls -> downloadImages(urls) }
+        message.imageAttachments?.images?.also { images ->
+            downloadImagesToInternalDir(images)
+            downloadImagesToExternalDir(images)
+        }
         listeners.forEach { it.onMessageReceived(message) }
     }
 
-    private fun downloadImages(urls: List<String>) {
+    private fun downloadImagesToInternalDir(images: List<ImageInfo>) {
+        // TODO: download files here
+    }
+
+    private fun downloadImagesToExternalDir(images: List<ImageInfo>) {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as? DownloadManager
             ?: return
-        urls.forEach { url ->
+        images.forEach { info ->
             val folderName = "chatty_ai_bot"
             val fileName = "image-${System.currentTimeMillis()}.png"
             val subPath = File.separator + folderName + File.separator + fileName
-            val request = DownloadManager.Request(Uri.parse(url))
+            val request = DownloadManager.Request(Uri.parse(info.imageUrl))
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
                 .setDestinationInExternalPublicDir(
                     Environment.DIRECTORY_DOWNLOADS, subPath
@@ -232,15 +244,22 @@ class OpenAIChat constructor(
         override fun parseMessageResponse(body: ResponseBody): Message {
             val json = JSONObject(body.string())
             val data = json.getJSONArray("data")
-            val imageUrls = ArrayList<String>(1)
+            val images = ArrayList<ImageInfo>(1)
+            val imageDir = getImageDir()
             for (i in 0 until data.length()) {
                 val url = data.optJSONObject(i)?.optString("url")
                 if (!url.isNullOrBlank()) {
-                    imageUrls.add(url)
+                    val filename = System.currentTimeMillis().toString()
+                    val file = File(imageDir, filename)
+                    val imageInfo = ImageInfo(
+                        imageUrl = url,
+                        filepath = file.absolutePath
+                    )
+                    images.add(imageInfo)
                 }
             }
             val imageAttachments = object : ImageAttachments {
-                override val imageUrls: List<String> = imageUrls
+                override val images: List<ImageInfo> = images
             }
             return createMessage(isFromUser = false, text = "", imageAttachments = imageAttachments)
         }

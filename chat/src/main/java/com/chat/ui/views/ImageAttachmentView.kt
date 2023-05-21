@@ -21,8 +21,12 @@ internal class ImageAttachmentView @JvmOverloads constructor(
     }
 
     fun bind(attachment: ImageAttachments?) {
+        val imageInfo = attachment?.images?.firstOrNull()
         Glide.with(this)
-            .load(attachment?.imageUrls?.firstOrNull())
+            .load(imageInfo?.imageUrl)
+            .error(
+                Glide.with(imageView).load(imageInfo?.filepath)
+            )
             .into(imageView)
     }
 }

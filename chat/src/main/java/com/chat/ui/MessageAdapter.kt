@@ -172,7 +172,7 @@ internal class MessageAdapter constructor(
                     text = item.text
                 }
                 imageAttachmentView.apply {
-                    isVisible = !item.imageAttachments?.imageUrls.isNullOrEmpty()
+                    isVisible = !item.imageAttachments?.images.isNullOrEmpty()
                     bind(item.imageAttachments)
                 }
                 dateView.text = MessageDateUtils.getDateText(item)

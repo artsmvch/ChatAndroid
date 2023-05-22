@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -144,6 +145,8 @@ internal class ChatFragment : Fragment() {
                 stackFromEnd = true
             }
             // addItemDecoration(MessageMarginItemDecoration())
+            // this.adapter = ConcatAdapter(OnboardingMessageAdapter(), adapter)
+            // this.adapter = OnboardingMessageAdapter()
             this.adapter = adapter
         }
 

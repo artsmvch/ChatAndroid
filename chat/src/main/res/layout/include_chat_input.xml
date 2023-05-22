@@ -51,7 +51,7 @@
                 android:imeOptions="actionSend"
                 android:includeFontPadding="false"
                 android:gravity="start|center_vertical"
-                android:hint="@string/input_field_hint"
+                android:hint="@string/generate_text"
                 android:background="@null"/>
 
             <androidx.appcompat.widget.AppCompatImageView

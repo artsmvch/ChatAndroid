@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="pager_indicator_radius">3.5dp</dimen>
+    <dimen name="message_corner_radius">16dp</dimen>
+    <dimen name="message_horizontal_padding">32dp</dimen>
 </resources>

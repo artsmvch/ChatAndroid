@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/message_horizontal_padding"
+    android:orientation="vertical"
+    tools:ignore="RtlSymmetry">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:checkable="true"
+        app:checkedIconMargin="4dp"
+        app:checkedIconSize="20dp"
+        app:cardMaxElevation="1dp"
+        app:cardElevation="1dp"
+        app:rippleColor="@color/message_card_ripple">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                app:layout_constraintGuide_begin="12dp"
+                android:id="@+id/text_guideline_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                app:layout_constraintGuide_end="12dp"
+                android:id="@+id/text_guideline_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+            <TextView
+                app:layout_constraintStart_toStartOf="@id/text_guideline_start"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/text_guideline_end"
+                app:layout_constraintBottom_toTopOf="@id/text1"
+                android:id="@+id/text0"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/onboarding_text0"
+                android:textAppearance="?textAppearanceBody1"/>
+
+            <ImageView
+                app:layout_constraintStart_toStartOf="@id/text_guideline_start"
+                app:layout_constraintTop_toTopOf="@id/text1"
+                app:layout_constraintEnd_toStartOf="@id/text1"
+                android:id="@+id/image1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ic_onboarding_text"/>
+
+            <TextView
+                app:layout_constraintStart_toEndOf="@id/image1"
+                app:layout_constraintTop_toBottomOf="@id/text0"
+                app:layout_constraintEnd_toEndOf="@id/text_guideline_end"
+                app:layout_constraintBottom_toTopOf="@id/text2"
+                app:layout_constraintHeight_min="24dp"
+                android:id="@+id/text1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/onboarding_text1"
+                android:textAppearance="?textAppearanceBody1"/>
+
+            <ImageView
+                app:layout_constraintStart_toStartOf="@id/text_guideline_start"
+                app:layout_constraintTop_toTopOf="@id/text2"
+                app:layout_constraintEnd_toStartOf="@id/text2"
+                android:id="@+id/image2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/ic_onboarding_image"/>
+
+            <TextView
+                app:layout_constraintStart_toEndOf="@id/image2"
+                app:layout_constraintTop_toBottomOf="@id/text1"
+                app:layout_constraintEnd_toEndOf="@id/text_guideline_end"
+                app:layout_constraintBottom_toTopOf="@id/text3"
+                app:layout_constraintHeight_min="24dp"
+                android:id="@+id/text2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/onboarding_text2"
+                android:textAppearance="?textAppearanceBody1"/>
+
+            <TextView
+                app:layout_constraintStart_toStartOf="@id/text_guideline_start"
+                app:layout_constraintTop_toBottomOf="@id/text2"
+                app:layout_constraintEnd_toEndOf="@id/text_guideline_end"
+                app:layout_constraintBottom_toTopOf="@id/image3"
+                android:id="@+id/text3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/onboarding_text3"
+                android:textAppearance="?textAppearanceBody1"/>
+
+<!--            <include-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/text3"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintBottom_toTopOf="@id/text4"-->
+<!--                android:id="@+id/image3"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                layout="@layout/include_chat_input"/>-->
+
+            <ImageView
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/text4"
+                android:id="@+id/image3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/png_message_type_highlight"/>
+
+            <TextView
+                app:layout_constraintStart_toStartOf="@id/text_guideline_start"
+                app:layout_constraintTop_toBottomOf="@id/image3"
+                app:layout_constraintEnd_toEndOf="@id/text_guideline_end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/text4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@string/onboarding_text4"
+                android:textAppearance="?textAppearanceBody1"/>
+        </androidx.constraintlayout.widget.ConstraintLayout >
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

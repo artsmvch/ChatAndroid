@@ -18,6 +18,7 @@ import com.chat.utils.resolveColor
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
+import kotlin.math.roundToInt
 
 internal interface OnItemClickListener {
     fun onItemClick(item: Message, itemView: View) = Unit
@@ -109,11 +110,11 @@ internal class MessageAdapter constructor(
         private val textView: TextView
         private val imageAttachmentView: ImageAttachmentView = itemView.findViewById(R.id.image_attachment)
         private val dateView: TextView = itemView.findViewById(R.id.date)
-        private val horizontalPadding = itemView.context.dp(32)
+        private val horizontalPadding = itemView.context.resources.getDimension(R.dimen.message_horizontal_padding).roundToInt()
         private val messageBackgroundColor = itemView.context.resolveColor(R.attr.messageBackgroundColor)
         private val userMessageBackgroundColor = itemView.context.resolveColor(R.attr.userMessageBackgroundColor)
 
-        private val cardCornerRadius: Float = itemView.context.dp(16).toFloat()
+        private val cardCornerRadius: Float = itemView.context.resources.getDimension(R.dimen.message_corner_radius)
         private val defaultShapeAppearanceModel = ShapeAppearanceModel.builder()
             .setBottomLeftCorner(CornerFamily.ROUNDED, cardCornerRadius)
             .setTopLeftCorner(CornerFamily.ROUNDED, cardCornerRadius)

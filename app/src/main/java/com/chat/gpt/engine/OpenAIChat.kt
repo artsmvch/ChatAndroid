@@ -275,7 +275,7 @@ class OpenAIChat constructor(
             for (i in 0 until data.length()) {
                 val url = data.optJSONObject(i)?.optString("url")
                 if (!url.isNullOrBlank()) {
-                    val filename = System.currentTimeMillis().toString()
+                    val filename = System.currentTimeMillis().toString() + ".png"
                     val file = File(imageDir, filename)
                     val imageInfo = ImageInfo(
                         imageUrl = url,

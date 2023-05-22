@@ -30,6 +30,7 @@ private class MessageDatabaseImpl(
         Room.databaseBuilder(context, MessageRoomDatabase::class.java, "chat.$key.messages")
             .setJournalMode(RoomDatabase.JournalMode.AUTOMATIC)
             .addMigrations(MIGRATION_1_2)
+            .fallbackToDestructiveMigration()
             .build()
     }
 

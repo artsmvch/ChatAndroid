@@ -19,4 +19,16 @@
     <string name="user">ユーザー</string>
     <string name="bot">ボット</string>
     <string name="speaker">スピーカー</string>
+    <string name="text">文章</string>
+    <string name="generate_text">テキストの生成</string>
+    <string name="image">画像</string>
+    <string name="generate_image">画像の生成</string>
+    <string name="image_download_description">生成されたイメージをダウンロードしています…</string>
+    <string name="view_images">画像を見る</string>
+    <string name="download_images">画像をダウンロードする</string>
+    <string name="onboarding_text0">やあ！ 私はおしゃべりな人工知能ボットです。 私があなたのためにできることがいくつかあります。</string>
+    <string name="onboarding_text1">テキストの生成。 物語を語ったり、エッセイを手伝ったり、その他さまざまなことができます。</string>
+    <string name="onboarding_text2">画像の生成。 見たいものを入力するだけで生成されます。</string>
+    <string name="onboarding_text3">テキストと画像ジェネレーターを切り替えるには、メニューを使用します</string>
+    <string name="onboarding_text4">始めるために何か入力してください:)</string>
 </resources>

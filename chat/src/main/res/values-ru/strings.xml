@@ -19,4 +19,16 @@
     <string name="user">Пользователь</string>
     <string name="bot">Бот</string>
     <string name="speaker">Спикер</string>
+    <string name="text">Текст</string>
+    <string name="generate_text">Сгенерировать текст</string>
+    <string name="image">Изображение</string>
+    <string name="generate_image">Сгенерировать изображение</string>
+    <string name="image_download_description">Скачивание сгенерированных изображений…</string>
+    <string name="view_images">Посмотреть изображения</string>
+    <string name="download_images">Скачать изображения</string>
+    <string name="onboarding_text0">Привет! Я Chatty AI бот. Я могу сделать для вас несколько вещей:</string>
+    <string name="onboarding_text1">Генерация текста. Я могу рассказать вам историю, помочь с сочинением и многое другое.</string>
+    <string name="onboarding_text2">Генерация изображения. Просто напишите то, что вы хотите увидеть, и я сгенерирую это.</string>
+    <string name="onboarding_text3">Для переключения между генератором текста и изображения используйте меню</string>
+    <string name="onboarding_text4">Напишите мне что-нибудь для начала :)</string>
 </resources>

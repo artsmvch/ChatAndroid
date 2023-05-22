@@ -19,4 +19,16 @@
     <string name="user">사용자</string>
     <string name="bot">봇</string>
     <string name="speaker">스피커</string>
+    <string name="text">텍스트</string>
+    <string name="generate_text">텍스트 생성</string>
+    <string name="image">영상</string>
+    <string name="generate_image">이미지 생성</string>
+    <string name="image_download_description">생성된 이미지 다운로드 중…</string>
+    <string name="view_images">이미지 보기</string>
+    <string name="download_images">이미지 다운로드</string>
+    <string name="onboarding_text0">안녕! 저는 수다쟁이 인공지능 봇입니다. 내가 당신을 위해 할 수 있는 몇 가지 일이 있습니다:</string>
+    <string name="onboarding_text1">텍스트 생성. 나는 이야기를 들려주고, 에세이 작성을 돕는 등 많은 일을 할 수 있습니다.</string>
+    <string name="onboarding_text2">그림 세대. 보고 싶은 것을 입력하면 생성해 드립니다.</string>
+    <string name="onboarding_text3">텍스트와 그림 생성기 사이를 전환하려면 메뉴를 사용하십시오.</string>
+    <string name="onboarding_text4">시작할 내용을 입력하세요 :)</string>
 </resources>

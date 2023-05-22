@@ -26,7 +26,7 @@
     <string name="image_download_description">Downloading generated images…</string>
     <string name="view_images">View images</string>
     <string name="download_images">Download images</string>
-    <string name="onboarding_text0">Hi! I’m Chatty AI bot. There are several things I can do for you:</string>
+    <string name="onboarding_text0">Hi! I\'m Chatty AI bot. There are several things I can do for you:</string>
     <string name="onboarding_text1">Text generation. I can tell you a story, help with an essay, and much more.</string>
     <string name="onboarding_text2">Picture generation. Just type in what you want to see and I will generate it.</string>
     <string name="onboarding_text3">To switch between text and picture generator use menu</string>

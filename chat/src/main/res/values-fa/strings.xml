@@ -19,4 +19,16 @@
     <string name="user">کاربر</string>
     <string name="bot">ربات</string>
     <string name="speaker">بلندگو</string>
+    <string name="text">متن</string>
+    <string name="generate_text">تولید متن</string>
+    <string name="image">تصویر</string>
+    <string name="generate_image">ایجاد تصویر</string>
+    <string name="image_download_description">در حال دانلود تصاویر تولید شده…</string>
+    <string name="view_images">مشاهده تصاویر</string>
+    <string name="download_images">دانلود تصاویر</string>
+    <string name="onboarding_text0">سلام! من ربات هوش مصنوعی چتی هستم. چندین کار وجود دارد که می توانم برای شما انجام دهم:</string>
+    <string name="onboarding_text1">تولید متن من می توانم برای شما یک داستان بگویم، در یک مقاله کمک کنم، و خیلی چیزهای دیگر.</string>
+    <string name="onboarding_text2">تولید تصویر فقط آنچه را که می خواهید ببینید تایپ کنید و من آن را تولید خواهم کرد.</string>
+    <string name="onboarding_text3">برای جابجایی بین متن و تولید کننده تصویر از منو استفاده کنید</string>
+    <string name="onboarding_text4">برای شروع چیزی برای من تایپ کنید :)</string>
 </resources>

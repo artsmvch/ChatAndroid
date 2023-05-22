@@ -111,7 +111,8 @@ class OpenAIChat constructor(
     private fun onMessageReceived(message: Message) {
         message.imageAttachments?.images?.also { images ->
             downloadImagesToInternalDir(images)
-            downloadImagesToExternalDir(images)
+            // TODO: fix permission issues
+            // downloadImagesToExternalDir(images)
         }
         listeners.forEach { it.onMessageReceived(message) }
     }

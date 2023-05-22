@@ -6,7 +6,7 @@ plugins {
 def version_code = 11
 def version_major = 1
 def version_minor = 2
-def version_patch = 0
+def version_patch = 1
 def version_name = "${version_major}.${version_minor}.${version_patch}"
 
 Properties localProperties = new Properties()

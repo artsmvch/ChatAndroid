@@ -145,9 +145,8 @@ internal class ChatFragment : Fragment() {
                 stackFromEnd = true
             }
             // addItemDecoration(MessageMarginItemDecoration())
-            // this.adapter = ConcatAdapter(OnboardingMessageAdapter(), adapter)
-            // this.adapter = OnboardingMessageAdapter()
-            this.adapter = adapter
+            // this.adapter = adapter
+            this.adapter = ConcatAdapter(OnboardingMessageAdapter(), adapter)
         }
 
         suggestionsChipGroup = view.findViewById(R.id.suggestions)
@@ -199,7 +198,9 @@ internal class ChatFragment : Fragment() {
         }
 
         suggestions.observe(owner) { suggestions ->
-            setSuggestions(suggestions)
+            // setSuggestions(suggestions)
+            // TODO: disable suggestions for now since we have an onboarding message
+            setSuggestions(null)
         }
 
         error.observe(owner) { error ->

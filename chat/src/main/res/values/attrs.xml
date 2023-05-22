@@ -4,6 +4,8 @@
     <attr name="chatOnBackgroundColor" format="color"/>
     <attr name="chatInputFieldTintActive" type="color"/>
     <attr name="chatInputFieldTintInactive" type="color"/>
+    <attr name="chatButtonTintActive" type="color"/>
+    <attr name="chatButtonTintInactive" type="color"/>
     <attr name="chatSendActionTint" type="color"/>
     <attr name="chatProgressTint" type="color"/>
 

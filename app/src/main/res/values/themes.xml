@@ -23,7 +23,9 @@
         <item name="chatBackground">@drawable/bg_chat_gradient</item>
         <item name="chatOnBackgroundColor">@color/white</item>
         <item name="chatInputFieldTintActive">?colorPrimary</item>
-        <item name="chatInputFieldTintInactive">#E8E8E8</item>
+        <item name="chatInputFieldTintInactive">#C5C5C5</item>
+        <item name="chatButtonTintActive">?colorPrimary</item>
+        <item name="chatButtonTintInactive">#EAEAEA</item>
         <item name="chatSendActionTint">?colorPrimary</item>
         <item name="chatProgressTint">?colorPrimary</item>
         <item name="messageForegroundColor">#3E3E3E</item>

@@ -151,4 +151,19 @@
                 android:textAppearance="?textAppearanceBody1"/>
         </androidx.constraintlayout.widget.ConstraintLayout >
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="12dp"
+        android:layout_gravity="start"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textAppearance="?textAppearanceBody1"
+        android:textColor="?chatOnBackgroundColor"
+        tools:text="08.09.1996"/>
 </LinearLayout>

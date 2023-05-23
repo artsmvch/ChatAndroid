@@ -10,10 +10,14 @@ internal object MessageDateUtils {
     fun getDateText(message: Message): String {
 //        val date = Date(message.timestamp)
 //        val localDate = LocalDate.fromDateFields(date)
-        return if (DateUtils.isToday(message.timestamp)) {
-            TODAY_DATE_FORMAT.print(message.timestamp)
+        return getDateText(message.timestamp)
+    }
+
+    fun getDateText(timestamp: Long): String {
+        return if (DateUtils.isToday(timestamp)) {
+            TODAY_DATE_FORMAT.print(timestamp)
         } else {
-            DATE_FORMAT.print(message.timestamp)
+            DATE_FORMAT.print(timestamp)
         }
     }
 }

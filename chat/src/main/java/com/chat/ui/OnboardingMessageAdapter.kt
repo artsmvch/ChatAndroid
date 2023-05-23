@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.RecyclerView
+import com.chat.utils.getFirstInstallTime
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.RoundedCornerTreatment
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -25,6 +27,11 @@ internal class OnboardingMessageAdapter : RecyclerView.Adapter<OnboardingMessage
                 .setTopRightCorner(corner)
                 .setBottomRightCorner(corner)
                 .build()
+        }
+        itemView.findViewById<TextView>(R.id.date)?.apply {
+            text = context.getFirstInstallTime().let {
+                MessageDateUtils.getDateText(it ?: System.currentTimeMillis())
+            }
         }
         itemView.disableTouchRecursively()
         return ViewHolder(itemView)

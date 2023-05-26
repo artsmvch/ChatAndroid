@@ -193,7 +193,8 @@ internal class ChatFragment : Fragment() {
 
         messagePagedList.observe(owner) { pagedList ->
             messageAdapter?.submitList(pagedList) {
-                smoothScrollToLastMessage()
+                // When a new paged list appears, just scroll to the bottom immediately
+                scrollToLastMessage(smoothScroll = false)
             }
         }
 
@@ -282,9 +283,14 @@ internal class ChatFragment : Fragment() {
         }
     }
 
-    private fun smoothScrollToLastMessage() {
+    private fun scrollToLastMessage(smoothScroll: Boolean) {
         val messageCount = messageAdapter?.currentList?.size ?: return
-        messageListView?.smoothScrollToPosition(messageCount)
+        val listView = messageListView ?: return
+        if (smoothScroll) {
+            listView.smoothScrollToPosition(messageCount)
+        } else {
+            listView.scrollToPosition(messageCount)
+        }
     }
 
     private fun skipWindowInsets(view: View) {

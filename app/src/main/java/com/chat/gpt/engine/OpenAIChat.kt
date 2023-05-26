@@ -39,11 +39,12 @@ class OpenAIChat constructor(
     private val config = OpenAIChatConfig(context, chatScope).apply { preload() }
 
     private val client: OkHttpClient by lazy {
+        val timeoutInSeconds = 150L
         OkHttpClient.Builder()
-            .callTimeout(30, TimeUnit.SECONDS)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .callTimeout(timeoutInSeconds, TimeUnit.SECONDS)
+            .connectTimeout(timeoutInSeconds, TimeUnit.SECONDS)
+            .readTimeout(timeoutInSeconds, TimeUnit.SECONDS)
+            .writeTimeout(timeoutInSeconds, TimeUnit.SECONDS)
             .build()
     }
 

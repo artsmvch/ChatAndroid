@@ -26,6 +26,7 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             return ChatViewModel(
                 chat = ChatFeature.requireChat(),
+                analytics = ChatFeature.getAnalytics() ?: Analytics.Empty,
                 preferences = getPreferencesInstance(context),
                 messageAttachmentsDownloader = getMessageAttachmentsDownloader(context),
                 speaker = getSpeakerInstance(context),
@@ -37,6 +38,7 @@ internal fun ChatViewModelFactory(context: Context): ViewModelProvider.Factory {
 
 internal class ChatViewModel(
     private val chat: Chat,
+    private val analytics: Analytics,
     private val preferences: Preferences,
     private val messageAttachmentsDownloader: MessageAttachmentsDownloader,
     private val speaker: Speaker,
@@ -163,7 +165,10 @@ internal class ChatViewModel(
                 } else {
                     sendMessage(text)
                 }
-            }.onFailure { _error.setValue(it) }
+            }.onFailure {
+                analytics.onError(it)
+                _error.setValue(it)
+            }
             _isLoading.value = false
         }
     }

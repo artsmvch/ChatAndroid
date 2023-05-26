@@ -83,7 +83,7 @@ internal class ChatFragment : Fragment() {
         view.findViewById<SafeDrawingImageView>(R.id.background).also { imageView ->
             skipWindowInsets(imageView)
             imageView.onError = { err ->
-                ChatFeature.getAnalytics()?.onError(err)
+                ChatFeature.getAnalytics()?.onUiError(err)
             }
             ChatBackgroundLoader.load(imageView)
         }

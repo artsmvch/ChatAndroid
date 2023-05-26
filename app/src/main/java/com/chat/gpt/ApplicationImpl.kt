@@ -30,7 +30,15 @@ class ApplicationImpl : Application() {
         chat.addListener(FirebaseAnalyticsChatListener(this))
         val analytics = object : Analytics {
             override fun onError(e: Throwable) {
-                FirebaseCrashlytics.getInstance().recordException(e)
+                reportError(e)
+            }
+
+            override fun onUiError(e: Throwable) {
+                reportError(e)
+            }
+
+            private fun reportError(error: Throwable) {
+                FirebaseCrashlytics.getInstance().recordException(error)
             }
         }
         ChatFeature.init(chat, analytics)

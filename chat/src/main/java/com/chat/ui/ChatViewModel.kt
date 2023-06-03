@@ -247,6 +247,10 @@ internal class ChatViewModel(
         _messageType.value = MessageType.GENERATE_IMAGE
     }
 
+    fun onUiErrorOccurred(error: Throwable) {
+        analytics.onUiError(error)
+    }
+
     override fun onCleared() {
         super.onCleared()
         chat.removeListener(chatListener)

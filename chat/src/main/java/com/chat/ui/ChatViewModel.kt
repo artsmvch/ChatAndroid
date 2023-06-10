@@ -43,7 +43,7 @@ internal class ChatViewModel(
     private val messageAttachmentsDownloader: MessageAttachmentsDownloader,
     private val speaker: Speaker,
     private val speechToText: SpeechToText
-) : ViewModel() {
+) : ViewModel(), BackPressHandler {
 
 //    val messages: LiveData<List<Message>> by lazy {
 //        liveData { chat.getMessages().collect { emit(it) } }
@@ -255,6 +255,15 @@ internal class ChatViewModel(
         super.onCleared()
         chat.removeListener(chatListener)
         speechToText.clear()
+    }
+
+    override fun handleBackPress(): Boolean {
+        return if (_isMessageTypeChooserVisible.value == true) {
+            _isMessageTypeChooserVisible.value = false
+            true
+        } else {
+            false
+        }
     }
 
     enum class MessageType {

@@ -35,7 +35,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 
-internal class ChatFragment : Fragment() {
+internal class ChatFragment : Fragment(), BackPressHandler {
     private var toolbar: MaterialToolbar? = null
     private var editText: EditText? = null
     private var microphoneButton: MicrophoneButton? = null
@@ -483,6 +483,10 @@ internal class ChatFragment : Fragment() {
 
     private fun isMicrophoneAvailable(context: Context): Boolean {
         return context.packageManager.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)
+    }
+
+    override fun handleBackPress(): Boolean {
+        return viewModel.handleBackPress()
     }
 
     companion object {

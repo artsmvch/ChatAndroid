@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.viewpager2.widget.ViewPager2
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button"
+        android:id="@+id/view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+    <com.google.android.material.tabs.TabLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/button"
+        app:layout_constraintEnd_toStartOf="@id/button"
+        app:layout_constraintBottom_toBottomOf="@id/button"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintWidth_default="wrap"
+        android:id="@+id/tabs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        app:tabMaxWidth="20dp"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabBackground="@drawable/ic_onboarding_indicator_selector"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabIndicatorColor="@android:color/transparent"/>
+
+    <com.google.android.material.button.MaterialButton
+        app:layout_constraintStart_toEndOf="@id/tabs"
+        app:layout_constraintTop_toBottomOf="@id/view_pager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_default="wrap"
+        android:id="@+id/button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="36dp"
+        android:text="@string/next"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

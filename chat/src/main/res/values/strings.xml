@@ -31,4 +31,10 @@
     <string name="onboarding_text2">Picture generation. Just type in what you want to see and I will generate it.</string>
     <string name="onboarding_text3">To switch between text and picture generator use menu</string>
     <string name="onboarding_text4">Type me something to get started :)</string>
+    <string name="next">Next</string>
+    <string name="start">Start</string>
+    <string name="onboarding_page1_title">Screen reader</string>
+    <string name="onboarding_page1_subtitle">Click the speaker icon to enable or disable screen reader mode</string>
+    <string name="onboarding_page2_title">Generate picture and text</string>
+    <string name="onboarding_page2_subtitle">Use menu to switch between text and picture generator</string>
 </resources>

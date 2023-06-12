@@ -13,6 +13,9 @@ internal fun getPreferencesInstance(context: Context): Preferences {
 }
 
 internal interface Preferences {
+    fun isOnboardingNeededFlow(): Flow<Boolean>
+    suspend fun setOnboardingCompleted()
+
     fun isSpeakerMutedFlow(): Flow<Boolean>
     suspend fun isSpeakerMuted(): Boolean = isSpeakerMutedFlow().first()
     suspend fun setSpeakerMuted(muted: Boolean)
@@ -26,6 +29,15 @@ private class PreferencesImpl(
     private val context: Context
 ) : Preferences {
     private val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+    override fun isOnboardingNeededFlow(): Flow<Boolean> {
+        return sharedPreferences.getBooleanValueFlow(key = KEY_ONBOARDING_NEEDED, defValue = true)
+            .mapNotNull { it ?: true }
+    }
+
+    override suspend fun setOnboardingCompleted() {
+        sharedPreferences.edit { putBoolean(KEY_ONBOARDING_NEEDED, false) }
+    }
 
     override fun isSpeakerMutedFlow(): Flow<Boolean> {
         return sharedPreferences
@@ -52,6 +64,7 @@ private class PreferencesImpl(
     companion object {
         private const val PREFS_NAME = "com.chat.ui.preferences"
 
+        private const val KEY_ONBOARDING_NEEDED = "onboarding_needed"
         private const val KEY_SPEAKER_MUTED = "speaker_muted"
         private const val KEY_LANGUAGE = "language"
     }

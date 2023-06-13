@@ -85,7 +85,7 @@ dependencies {
     implementation project(path: ':utils')
     implementation project(path: ':firebase')
 
-    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
 
     implementation platform('com.google.firebase:firebase-bom:31.2.3')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'

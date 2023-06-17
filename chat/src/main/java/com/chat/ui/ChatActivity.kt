@@ -2,6 +2,7 @@ package com.chat.ui
 
 import android.content.Context
 import android.os.Bundle
+import androidx.annotation.CallSuper
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -81,6 +82,7 @@ abstract class ChatActivity : AppCompatActivity(), ChatOnboardingCallback {
         return false
     }
 
+    @CallSuper
     override fun onOnboardingComplete() {
         viewModel.onOnboardingCompleted()
     }

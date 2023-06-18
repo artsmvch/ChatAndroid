@@ -103,13 +103,15 @@ internal class ChatHostViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return ChatHostViewModel(
-            preferences = getPreferencesInstance(context)
+            preferences = getPreferencesInstance(context),
+            analytics = ChatFeature.getAnalytics() ?: Analytics.Empty
         ) as T
     }
 }
 
 internal class ChatHostViewModel(
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val analytics: Analytics
 ): ViewModel() {
     private val _screen by lazy {
         liveData<Screen?> {
@@ -127,6 +129,7 @@ internal class ChatHostViewModel(
     fun onOnboardingCompleted() {
         viewModelScope.launch {
             preferences.setOnboardingCompleted()
+            analytics.onEvent(ChatEvent.ONBOARDING_COMPLETED)
         }
     }
 

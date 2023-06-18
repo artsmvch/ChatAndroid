@@ -169,6 +169,7 @@ internal class ChatViewModel(
                 analytics.onError(it)
                 _error.setValue(it)
             }
+            analytics.onEvent(ChatEvent.MESSAGE_SENT)
             _isLoading.value = false
         }
     }
@@ -231,6 +232,11 @@ internal class ChatViewModel(
             preferences.setSpeakerMuted(newMuted)
             if (newMuted) {
                 speaker.stop()
+            }
+            if (newMuted) {
+                analytics.onEvent(ChatEvent.SPEAKER_ENABLED)
+            } else {
+                analytics.onEvent(ChatEvent.SPEAKER_DISABLED)
             }
         }
     }

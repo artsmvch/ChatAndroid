@@ -21,7 +21,11 @@ class ApplicationImpl : Application() {
     }
 
     private fun setupAdMob() {
-        MobileAds.initialize(this)
+        try {
+            MobileAds.initialize(this)
+        } catch (e: Throwable) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+        }
     }
 
     private fun setupChat() {

@@ -1,6 +1,5 @@
 package com.chat.ui
 
-import androidx.fragment.app.Fragment
 import java.util.concurrent.atomic.AtomicReference
 
 object ChatFeature {
@@ -10,14 +9,6 @@ object ChatFeature {
     fun init(chat: Chat, analytics: Analytics = Analytics.Empty) {
         chatRef.set(chat)
         analyticsRef.set(analytics)
-    }
-
-    fun isChatScreen(fragment: Fragment): Boolean {
-        return fragment is ChatFragment
-    }
-
-    fun createChatScreen(): Fragment {
-        return ChatFragment()
     }
 
     internal fun requireChat(): Chat {

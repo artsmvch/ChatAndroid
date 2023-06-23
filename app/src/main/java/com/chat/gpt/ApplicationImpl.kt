@@ -2,7 +2,7 @@ package com.chat.gpt
 
 import android.app.Application
 import android.os.Bundle
-import com.chat.gpt.engine.OpenAIChat
+import com.chat.gpt.impl.OpenAIChat
 import com.chat.ui.Analytics
 import com.chat.ui.ChatEvent
 import com.chat.ui.ChatFeature

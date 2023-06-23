@@ -1,4 +1,4 @@
-package com.chat.gpt.engine
+package com.chat.gpt.impl
 
 
 internal enum class ApiError {

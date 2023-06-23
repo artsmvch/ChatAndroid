@@ -1,4 +1,4 @@
-package com.chat.gpt.engine
+package com.chat.gpt.impl
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -6,6 +6,7 @@ import android.content.coroutines.getBooleanValueFlow
 import android.content.coroutines.getStringValueFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapNotNull
 
 internal fun getPreferencesInstance(context: Context): Preferences {
@@ -31,8 +32,9 @@ private class PreferencesImpl(
     private val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     override fun isOnboardingNeededFlow(): Flow<Boolean> {
-        return sharedPreferences.getBooleanValueFlow(key = KEY_ONBOARDING_NEEDED, defValue = true)
-            .mapNotNull { it ?: true }
+        return flowOf(false)
+//        return sharedPreferences.getBooleanValueFlow(key = KEY_ONBOARDING_NEEDED, defValue = true)
+//            .mapNotNull { it ?: true }
     }
 
     override suspend fun setOnboardingCompleted() {

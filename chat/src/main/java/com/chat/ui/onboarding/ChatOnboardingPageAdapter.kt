@@ -47,8 +47,9 @@ internal class ChatOnboardingPageAdapter(
         init {
             imageView.outlineProvider = object : ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: Outline) {
-                    outline.setRoundRect(0, 0, view.measuredWidth, view.measuredHeight,
-                        view.context.dp(24).toFloat())
+                    val radius = view.context.dp(32)
+                    outline.setRoundRect(0, -radius, view.measuredWidth, view.measuredHeight,
+                        radius.toFloat())
                 }
             }
             imageView.clipToOutline = true

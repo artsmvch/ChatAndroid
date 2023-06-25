@@ -8,11 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.chat.ui.R
+import com.chat.ui.WithCustomStatusBar
+import com.chat.utils.resolveColor
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-internal class ChatOnboardingFragment : Fragment() {
+internal class ChatOnboardingFragment : Fragment(), WithCustomStatusBar {
     private val callback: ChatOnboardingCallback? get() {
         return (parentFragment as? ChatOnboardingCallback) ?: (activity as? ChatOnboardingCallback)
     }
@@ -25,6 +27,10 @@ internal class ChatOnboardingFragment : Fragment() {
 
     private var viewPager: ViewPager2? = null
     private var button: MaterialButton? = null
+
+    override fun getStatusBarColor(): Int? {
+        return context?.resolveColor(com.google.android.material.R.attr.colorSurface)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -7,6 +7,8 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -30,10 +32,24 @@ abstract class ChatActivity : AppCompatActivity(), ChatOnboardingCallback {
         provider[ChatHostViewModel::class.java]
     }
 
+    private val fragmentLifecycleCallbacks = object : FragmentLifecycleCallbacks() {
+        override fun onFragmentResumed(fragmentManager: FragmentManager, fragment: Fragment) {
+            window?.also { safeWindow ->
+                var statusBarColor = (fragment as? WithCustomStatusBar)?.getStatusBarColor()
+                if (statusBarColor == null) {
+                    statusBarColor = resolveColor(android.R.attr.statusBarColor)
+                }
+                SystemBarUtils.setStatusBarColor(safeWindow, statusBarColor)
+                SystemBarUtils.setStatusBarAppearanceLight(safeWindow, SystemBarUtils.isLight(statusBarColor))
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_chat)
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentLifecycleCallbacks, false)
         viewModel.screen.observe(this) { screen: Screen? ->
             val fragmentClazz = when(screen) {
                 Screen.ONBOARDING -> ChatOnboardingFragment::class
@@ -46,11 +62,9 @@ abstract class ChatActivity : AppCompatActivity(), ChatOnboardingCallback {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        window?.apply {
-            SystemBarUtils.setStatusBarColor(this, resolveColor(android.R.attr.statusBarColor))
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks)
     }
 
     @UiThread

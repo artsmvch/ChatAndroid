@@ -13,8 +13,9 @@ import com.chat.ui.ImageAttachments
 import com.chat.ui.ImageInfo
 import com.chat.ui.Message
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -36,6 +37,7 @@ import kotlin.coroutines.suspendCoroutine
 class OpenAIChat constructor(
     private val context: Context,
 ) : DatabaseChat(context, "openai"), Chat {
+    private val coroutineScope = CoroutineScope(SupervisorJob())
     private val config = OpenAIChatConfig(context, chatScope).apply { preload() }
 
     private val client: OkHttpClient by lazy {
@@ -120,7 +122,7 @@ class OpenAIChat constructor(
 
     private fun downloadImagesToInternalDir(images: List<ImageInfo>) {
         images.forEach { info ->
-            GlobalScope.launch(Dispatchers.IO) {
+            coroutineScope.launch(Dispatchers.IO) {
                 val imageUrl = info.imageUrl ?: return@launch
                 val filepath = info.filepath ?: return@launch
                 try {

@@ -29,5 +29,5 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-config-ktx:21.2.1'
+    implementation 'com.google.firebase:firebase-config-ktx:21.4.1'
 }

@@ -15,6 +15,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Chat"
 include ':app'
-include ':chat'
+include ':chat-core'
+include ':chat-ui'
 include ':utils'
 include ':firebase'

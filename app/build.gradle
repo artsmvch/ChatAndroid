@@ -11,11 +11,11 @@ def version_name = "${version_major}.${version_minor}.${version_patch}"
 
 Properties localProperties = new Properties()
 localProperties.load(project.file('local.properties').newDataInputStream())
-println("loadedProperties=" + localProperties)
+def GOOGLE_SERVICES_ENABLED = localProperties['com.google.services.enabled'] == 'true'
 
 android {
-    namespace 'com.chat.gpt'
-    compileSdk 33
+    namespace 'com.chat.app'
+    compileSdk 34
 
     signingConfigs {
         release {
@@ -31,11 +31,13 @@ android {
     defaultConfig {
         applicationId "com.chat.bot"
         minSdk 23
-        targetSdk 33
+        targetSdk 34
         versionCode version_code
         versionName version_name
 
-        buildConfigField "String", "OPEN_AI_API_KEY", "\"${localProperties.getProperty('openai.apikey') ?: ""}\""
+        buildConfigField "boolean", "GOOGLE_SERVICES_ENABLED", GOOGLE_SERVICES_ENABLED.toString()
+//        buildConfigField "String", "OPEN_AI_API_KEY", "\"${localProperties.getProperty('openai.apikey') ?: ""}\""
+        buildConfigField "String", "DEEPSEEK_API_KEY", "\"${localProperties.getProperty('deepseek.apikey') ?: ""}\""
         buildConfigField "String", "ADMOB_INTERSTIAIL_AD_UNIT_ID", "\"${localProperties.getProperty('admob.interstitial_ad_unit_id') ?: ""}\""
 
         resValue "string", "admob_app_id", "\"${localProperties.getProperty('admob.app_id') ?: ""}\""
@@ -59,11 +61,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 }
 
@@ -81,7 +87,9 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
-    implementation project(path: ':chat')
+    implementation project(path: ':chat-core')
+    implementation project(path: ':chat-ui')
+
     implementation project(path: ':utils')
     implementation project(path: ':firebase')
 
@@ -92,7 +100,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 }
 
-if (localProperties['com.google.services.enabled'] == 'true') {
+if (GOOGLE_SERVICES_ENABLED) {
     apply plugin: 'com.google.gms.google-services'
     apply plugin: 'com.google.firebase.crashlytics'
 }

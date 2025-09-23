@@ -8,7 +8,7 @@
 
     <application
         android:name=".ApplicationImpl"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
@@ -25,7 +25,7 @@
             android:value="@string/admob_app_id"/>
 
         <activity
-            android:name="com.chat.gpt.MainActivity"
+            android:name="com.chat.app.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
